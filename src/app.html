@@ -1,9 +1,29 @@
 <!doctype html>
+
 <html lang="en">
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<meta name="text-scale" content="scale" />
+
+		<script>
+			// Loads the user's chosen color scheme, or just picks system. Also validates because why not
+			const storedTheme = localStorage.getItem('theme') ?? 'system';
+			const preference =
+				storedTheme === 'light' || storedTheme === 'dark' || storedTheme === 'system'
+					? storedTheme
+					: 'system';
+
+			const theme =
+				preference === 'system'
+					? window.matchMedia('(prefers-color-scheme: dark)').matches
+						? 'dark'
+						: 'light'
+					: preference;
+
+			document.documentElement.dataset.theme = theme;
+		</script>
+
 		%sveltekit.head%
 	</head>
 	<body data-sveltekit-preload-data="hover">

@@ -1,1 +1,85 @@
 @import 'tailwindcss';
+
+@theme {
+	/* Palette */
+	--color-sugar-cane-50: #f6fbf2;
+	--color-sugar-cane-100: #eaf7e1;
+	--color-sugar-cane-200: #d5eec4;
+	--color-sugar-cane-300: #b2df96;
+	--color-sugar-cane-400: #89c761;
+	--color-sugar-cane-500: #66ac3b;
+	--color-sugar-cane-600: #518d2c;
+	--color-sugar-cane-700: #417025;
+	--color-sugar-cane-800: #365922;
+	--color-sugar-cane-900: #2d491e;
+	--color-sugar-cane-950: #15280b;
+
+	--color-background: var(--theme-background);
+	--color-info-background: var(--theme-info-background);
+	--color-surface: var(--theme-surface);
+	--color-surface-hover: var(--theme-surface-hover);
+	--color-primary: var(--theme-primary);
+	--color-primary-hover: var(--theme-primary-hover);
+	--color-text: var(--theme-text);
+	--color-text-muted: var(--theme-text-muted);
+	--color-border: var(--theme-border);
+	--color-hover: var(--theme-hover);
+	--color-danger: var(--theme-danger);
+
+	/* Not color related stuff :) */
+	--post-padding: var(--post-padding);
+}
+
+:root {
+	/* Basic info */
+	--post-padding: 1rem;
+
+	/* Light theme */
+	--theme-background: #ffffff;
+	--theme-info-background: var(--color-sugar-cane-200);
+	--theme-surface: #f5f5f5;
+	--theme-surface-hover: #e8e8e8;
+	--theme-primary: var(--color-sugar-cane-600);
+	--theme-primary-hover: var(--color-sugar-cane-700);
+	--theme-text: #111111;
+	--theme-text-muted: #666666;
+	--theme-border: #dddddd;
+	--theme-hover: #cacaca;
+	--theme-danger: #9f2929;
+
+	color-scheme: light;
+}
+
+:root[data-theme='dark'] {
+	--theme-background: #0d0d0d;
+	--theme-info-background: var(--color-sugar-cane-800);
+	--theme-surface: #121212;
+	--theme-surface-hover: #252528;
+	--theme-primary: var(--color-sugar-cane-400);
+	--theme-primary-hover: var(--color-sugar-cane-300);
+	--theme-text: #f5f5f5;
+	--theme-text-muted: #999999;
+	--theme-border: #303030;
+	--theme-hover: #414141;
+	--theme-danger: #d46868;
+
+	color-scheme: dark;
+}
+
+@layer base {
+	html,
+	body {
+		background-color: var(--color-background);
+		color: var(--color-text);
+	}
+
+	body {
+		margin: 0;
+		min-height: 100dvh;
+	}
+
+	h1 {
+		font-size: x-large;
+		font-weight: bold;
+	}
+}

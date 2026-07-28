@@ -41,5 +41,14 @@
 		"vite": "^8.0.16",
 		"vitest": "^4.1.8",
 		"vitest-browser-svelte": "^2.1.1"
+	},
+	"dependencies": {
+		"@atproto/api": "^0.20.34",
+		"@capacitor/cli": "^8.4.2",
+		"@capacitor/core": "^8.4.2",
+		"@capgo/capacitor-native-navigation": "^8.3.0",
+		"@lucide/svelte": "^1.27.0",
+		"@tanstack/svelte-query": "^6.1.38",
+		"bits-ui": "^2.18.1"
 	}
 }
