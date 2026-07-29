@@ -22,7 +22,7 @@
 
 	.search-container {
 		width: 100%;
-		height: 3rem;
+		height: 100%;
 
 		display: flex;
 		gap: 1rem;
@@ -30,7 +30,11 @@
 
 		align-items: center;
 
+		background-color: var(--color-background);
+
 		border: 1px solid var(--color-border);
+
+		border-radius: var(--roundness);
 	}
 
 	/* Remove the box outline focus thing on input, as we have a custom one */
@@ -48,5 +52,11 @@
 	/* Focused (text area selected) */
 	.search-container:focus-within {
 		outline: 1px solid var(--color-primary);
+	}
+
+	@media (width < 1000px) {
+		aside {
+			padding-left: 0px;
+		}
 	}
 </style>

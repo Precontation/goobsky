@@ -3,7 +3,7 @@
 	import { onMount } from 'svelte';
 	// Import the bluesky post types
 	import Post from '$lib/components/feed/post/Post.svelte';
-	import type { AppBskyFeedDefs, AppBskyFeedGetFeed } from '@atproto/api';
+	import type { AppBskyFeedDefs, AppBskyFeedGetFeed, AppBskyRichtextFacet } from '@atproto/api';
 	import { AppBskyFeedPost } from '@atproto/api';
 
 	// Create aliases so it's easier to reference in the code
@@ -52,8 +52,8 @@
 			displayName={item.post.author.displayName ?? 'Unknown user'}
 			avatar={item.post.author.avatar}
 			handle={item.post.author.handle ?? 'Unknown handle'}
-			content={(item.post.record.content as string) ?? ''}
-			facets={item.post.record.facets as string}
+			content={(item.post.record.text as string) ?? 'asdf'}
+			facets={item.post.record.facets as AppBskyRichtextFacet.Main[]}
 			embed={item.post.embed}
 			replies={item.post.replyCount}
 			reposts={item.post.repostCount}

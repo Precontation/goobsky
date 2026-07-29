@@ -7,9 +7,9 @@
 	const isActive = $derived(page.url.pathname === href);
 </script>
 
-<a href={resolve(href as `/${string}`)} class="nav-button">
+<a href={resolve(href as `/${string}`)} class="nav-button" class:active={isActive}>
 	{@render children()}
-	<span class:active={isActive}>{name}</span>
+	<span class="text">{name}</span>
 </a>
 
 <style>
@@ -21,6 +21,8 @@
 		white-space: nowrap;
 
 		font-size: large;
+
+		border-radius: var(--roundness);
 	}
 
 	.nav-button:hover {
@@ -28,7 +30,12 @@
 	}
 
 	.active {
-		/* Apply a small text shadow to the element when active. It's not much, but it looks nice! */
-		text-shadow: var(--color-primary) 1px 0 10px;
+		color: var(--color-primary);
+	}
+
+	@media (width < 1300px) {
+		.text {
+			display: none;
+		}
 	}
 </style>

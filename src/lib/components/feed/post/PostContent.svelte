@@ -1,32 +1,38 @@
 <script lang="ts">
+	import type { AppBskyRichtextFacet } from '@atproto/api';
 	import { RichText } from '@atproto/api';
 
-	let { content } = $props();
+	let { content, facets }: { content: string; facets?: AppBskyRichtextFacet.Main[] } = $props();
 
 	let completedContent = $derived.by(() => {
 		// Create the richtext from the content
 		const rt = new RichText({
-			text: content
+			text: content,
+			facets: facets
 		});
 
+		console.log('Content is: ', content.toString());
+		console.log('Facets are: ', facets?.toString());
 		// Return the segments
 		return rt.segments();
 	});
 </script>
 
-{#each completedContent as element}
-	{#if element.isLink()}
-		<a href={element.link?.uri} class="link">{element.text}</a>
-	{:else if element.isMention()}
-		<!-- <a href="">{element.text}</a> -->
-		<p class="mention">{element.text}</p>
-	{:else if element.isTag()}
-		<!-- <a href="">{element.text}</a> -->
-		<p class="tag">{element.text}</p>
-	{:else}
-		<p>{element.text}</p>
-	{/if}
-{/each}
+<div class="block whitespace-pre-wrap">
+	{#each completedContent as element}
+		{#if element.isLink()}
+			<a href={element.link?.uri} class="link">{element.text}</a>
+		{:else if element.isMention()}
+			<!-- <a href="">{element.text}</a> -->
+			<span class="mention">{element.text}</span>
+		{:else if element.isTag()}
+			<!-- <a href="">{element.text}</a> -->
+			<span class="tag">{element.text}</span>
+		{:else}
+			<span>{element.text}</span>
+		{/if}
+	{/each}
+</div>
 
 <style>
 	.link,

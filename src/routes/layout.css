@@ -33,6 +33,8 @@
 :root {
 	/* Basic info */
 	--post-padding: 1rem;
+	/* TODO: make roundness customizable: 0px, 8px, 16px, and "please no" 100%; */
+	--roundness: 0px;
 
 	/* Light theme */
 	--theme-background: #ffffff;
@@ -81,5 +83,10 @@
 	h1 {
 		font-size: x-large;
 		font-weight: bold;
+	}
+
+	::selection {
+		background-color: var(--theme-primary);
+		color: var(--theme-background);
 	}
 }

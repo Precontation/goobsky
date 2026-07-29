@@ -5,7 +5,8 @@
 		AppBskyEmbedImages,
 		AppBskyEmbedRecord,
 		AppBskyEmbedRecordWithMedia,
-		AppBskyEmbedVideo
+		AppBskyEmbedVideo,
+		AppBskyRichtextFacet
 	} from '@atproto/api';
 	import { Bookmark, Eye, Heart, MessageSquare, Repeat } from '@lucide/svelte';
 	import PostContent from './PostContent.svelte';
@@ -16,7 +17,7 @@
 		avatar,
 		handle,
 		content,
-		// facets,
+		facets,
 		embed,
 		replies,
 		reposts,
@@ -28,7 +29,7 @@
 		avatar?: string;
 		handle: string;
 		content: string;
-		// facets:
+		facets?: AppBskyRichtextFacet.Main[];
 		embed?:
 			| AppBskyEmbedImages.View
 			| AppBskyEmbedVideo.View
@@ -47,7 +48,7 @@
 	} = $props();
 </script>
 
-<div class="post-container">
+<article>
 	<div class="flex gap-2">
 		<img
 			loading="lazy"
@@ -60,48 +61,48 @@
 				<span class="font-bold">{displayName}</span>
 				<span class="text-xs">@{handle}</span>
 			</div>
-			<PostContent {content} />
+			<PostContent {content} {facets} />
 			{#if embed}
 				<PostEmbed {embed} />
 			{/if}
 		</div>
 	</div>
 	<div class="flex gap-5">
-		{#if replies}
+		{#if replies !== undefined}
 			<div class="stat">
 				<MessageSquare />
 				{replies}
 			</div>
 		{/if}
-		{#if reposts}
+		{#if reposts !== undefined}
 			<div class="stat">
 				<Repeat />
 				{reposts}
 			</div>
 		{/if}
-		{#if likes}
+		{#if likes !== undefined}
 			<div class="stat">
 				<Heart />
 				{likes}
 			</div>
 		{/if}
-		{#if views}
+		{#if views !== undefined}
 			<div class="stat">
 				<Eye />
 				{views}
 			</div>
 		{/if}
-		{#if bookmarks}
+		{#if bookmarks !== undefined}
 			<div class="stat">
 				<Bookmark />
 				{bookmarks}
 			</div>
 		{/if}
 	</div>
-</div>
+</article>
 
 <style>
-	.post-container {
+	article {
 		padding: var(--post-padding);
 		position: relative;
 		border-bottom: 1px solid var(--color-border);

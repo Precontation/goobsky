@@ -27,17 +27,24 @@
 {#if AppBskyEmbedImages.isView(embed.embed)}
 	{#each embed.embed.images as image}
 		<!-- TODO: onclick load in a popup the full size image -->
-		<img src={image.thumb} loading="lazy" alt={image.alt} />
+		<img src={image.thumb} loading="lazy" alt={image.alt} class="embed-content" />
 	{/each}
 {:else if AppBskyEmbedVideo.isView(embed.embed)}
 	<!-- <video src={} ></video> -->
-	<img src={embed.embed.thumbnail} alt={embed.embed.alt} />
+	<img src={embed.embed.thumbnail} alt={embed.embed.alt} class="embed-content" />
 {:else if AppBskyEmbedGallery.isView(embed.embed)}
 	{#each embed.embed.items as item}
 		<img
 			src={(item as AppBskyEmbedGallery.ViewImage).thumbnail}
 			loading="lazy"
 			alt={(item as AppBskyEmbedGallery.ViewImage).alt}
+			class="embed-content"
 		/>
 	{/each}
 {/if}
+
+<style>
+	.embed-content {
+		border-radius: var(--roundness);
+	}
+</style>
