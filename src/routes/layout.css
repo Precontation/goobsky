@@ -28,6 +28,7 @@
 
 	/* Not color related stuff :) */
 	--post-padding: var(--post-padding);
+	--roundness: var(--roundness);
 }
 
 :root {
@@ -81,6 +82,12 @@
 	}
 
 	h1 {
+		font-size: var(--text-4xl) /* 2.25rem = 36px */;
+		line-height: var(--tw-leading, var(--text-4xl--line-height) /* calc(2.5 / 2.25) ≈ 1.111111 */);
+		font-weight: bold;
+	}
+
+	h2 {
 		font-size: x-large;
 		font-weight: bold;
 	}

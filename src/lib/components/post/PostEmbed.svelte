@@ -1,6 +1,7 @@
 <script lang="ts">
 	// TODO: either make this not bluesky-specific or have seperate components for each
 
+	import VideoPlayer from '$lib/components/media/VideoPlayer.svelte';
 	import {
 		AppBskyEmbedExternal,
 		AppBskyEmbedGallery,
@@ -30,8 +31,14 @@
 		<img src={image.thumb} loading="lazy" alt={image.alt} class="embed-content" />
 	{/each}
 {:else if AppBskyEmbedVideo.isView(embed.embed)}
-	<!-- <video src={} ></video> -->
-	<img src={embed.embed.thumbnail} alt={embed.embed.alt} class="embed-content" />
+	<VideoPlayer
+		title={embed.embed.alt}
+		src={embed.embed.playlist}
+		thumbnail={embed.embed.thumbnail}
+		aspectWidth={embed.embed.aspectRatio?.width ?? 1}
+		aspectHeight={embed.embed.aspectRatio?.height ?? 1}
+		class="embed-content flex w-fit justify-start"
+	></VideoPlayer>
 {:else if AppBskyEmbedGallery.isView(embed.embed)}
 	{#each embed.embed.items as item}
 		<img

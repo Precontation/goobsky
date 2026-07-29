@@ -13,7 +13,7 @@
 		// If in developement, don't save to localStorage to always be able to see the notification, but still hide this time
 		if (!dev) {
 			// Set the localStorage of "is element deleted"
-			const storageItem = `note-dismissed-${dismissalId}`;
+			const storageItem = `full-page-note-dismissed-${dismissalId}`;
 			localStorage.setItem(storageItem, '1');
 		}
 
@@ -29,7 +29,7 @@
 		}
 
 		// Get the localStorage of "is element deleted"
-		const storageItem = `note-dismissed-${dismissalId}`;
+		const storageItem = `full-page-note-dismissed-${dismissalId}`;
 		const storageResult = localStorage.getItem(storageItem);
 
 		if (storageResult) {
@@ -43,8 +43,8 @@
 </script>
 
 {#if isOpen}
-	<div class="note-container">
-		<h1>{title}</h1>
+	<div class="full-page-note-container">
+		<h2>{title}</h2>
 		<p>{content}</p>
 		{#if dismissalId}
 			<button class="close-button" onclick={() => close()}><X /></button>
@@ -52,10 +52,16 @@
 	</div>
 
 	<style>
-		.note-container {
-			background-color: var(--color-info-background);
+		.full-page-note-container {
+			background-color: var(--color-background);
 			padding: var(--post-padding);
 			position: relative;
+			width: 100%;
+			flex: 1;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
 		}
 
 		.close-button {

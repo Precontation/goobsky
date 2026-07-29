@@ -39,9 +39,10 @@
 	}
 
 	main {
-		min-height: 100dvh;
-		height: fit-content;
+		min-height: 0;
 		border-inline: 1px solid var(--color-border);
+		display: flex;
+		flex-direction: column;
 	}
 
 	@media (width < 1300px) {
@@ -53,7 +54,7 @@
 	@media (width < 1000px) {
 		.app-shell {
 			grid-template-columns: minmax(0, 600px);
-			grid-template-rows: 160 minmax(0, 600px) 160px;
+			grid-template-rows: auto 1fr auto;
 		}
 
 		.utility-panel {
