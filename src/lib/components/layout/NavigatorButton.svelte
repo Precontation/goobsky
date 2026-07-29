@@ -3,7 +3,16 @@
 	import type { Snippet } from 'svelte';
 
 	const { href, name, children }: { href: string; name: string; children: Snippet } = $props();
-	const isActive = $derived(page.url.pathname === href);
+	const isActive = $derived.by(() => {
+		if (href == '/') {
+			// Custom logic for home (since its just "/")
+			return page.url.pathname == href;
+		}
+
+		// Otherwise still highlight even if not on main page
+		// e.g. /settings/accounts/ should still highlight settings
+		return page.url.pathname.startsWith(href);
+	});
 </script>
 
 <a {href} class="nav-button" class:active={isActive}>
