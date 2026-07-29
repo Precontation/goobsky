@@ -2,7 +2,7 @@
 	import NoteElement from '$lib/components/feed/NoteElement.svelte';
 	import { onMount } from 'svelte';
 	// Import the bluesky post types
-	import Post from '$lib/components/feed/Post.svelte';
+	import Post from '$lib/components/feed/post/Post.svelte';
 	import type { AppBskyFeedDefs, AppBskyFeedGetFeed } from '@atproto/api';
 	import { AppBskyFeedPost } from '@atproto/api';
 
@@ -52,7 +52,9 @@
 			displayName={item.post.author.displayName ?? 'Unknown user'}
 			avatar={item.post.author.avatar}
 			handle={item.post.author.handle ?? 'Unknown handle'}
-			content={(item.post.record.text as string) ?? 'Unknown user'}
+			content={(item.post.record.content as string) ?? ''}
+			facets={item.post.record.facets as string}
+			embed={item.post.embed}
 			replies={item.post.replyCount}
 			reposts={item.post.repostCount}
 			likes={item.post.likeCount}

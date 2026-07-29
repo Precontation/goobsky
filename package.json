@@ -44,6 +44,7 @@
 	},
 	"dependencies": {
 		"@atproto/api": "^0.20.34",
+		"@atproto/oauth-client-browser": "^0.4.9",
 		"@capacitor/cli": "^8.4.2",
 		"@capacitor/core": "^8.4.2",
 		"@capgo/capacitor-native-navigation": "^8.3.0",

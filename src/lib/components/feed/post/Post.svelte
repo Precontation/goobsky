@@ -1,11 +1,23 @@
 <script lang="ts">
+	import {
+		AppBskyEmbedExternal,
+		AppBskyEmbedGallery,
+		AppBskyEmbedImages,
+		AppBskyEmbedRecord,
+		AppBskyEmbedRecordWithMedia,
+		AppBskyEmbedVideo
+	} from '@atproto/api';
 	import { Bookmark, Eye, Heart, MessageSquare, Repeat } from '@lucide/svelte';
+	import PostContent from './PostContent.svelte';
+	import PostEmbed from './PostEmbed.svelte';
 
 	let {
 		displayName,
 		avatar,
 		handle,
 		content,
+		// facets,
+		embed,
 		replies,
 		reposts,
 		likes,
@@ -16,6 +28,17 @@
 		avatar?: string;
 		handle: string;
 		content: string;
+		// facets:
+		embed?:
+			| AppBskyEmbedImages.View
+			| AppBskyEmbedVideo.View
+			| AppBskyEmbedGallery.View
+			| AppBskyEmbedExternal.View
+			| AppBskyEmbedRecord.View
+			| AppBskyEmbedRecordWithMedia.View
+			| {
+					$type: string;
+			  };
 		replies?: number;
 		reposts?: number;
 		likes?: number;
@@ -32,41 +55,44 @@
 			alt=""
 			class="avatar h-10 w-10 shrink-0 self-start border border-border object-cover"
 		/>
-		<div class="flex flex-col">
+		<div class="flex flex-col gap-1">
 			<div>
 				<span class="font-bold">{displayName}</span>
 				<span class="text-xs">@{handle}</span>
 			</div>
-			<p>{content}</p>
+			<PostContent {content} />
+			{#if embed}
+				<PostEmbed {embed} />
+			{/if}
 		</div>
 	</div>
 	<div class="flex gap-5">
 		{#if replies}
-			<div class="flex">
+			<div class="stat">
 				<MessageSquare />
 				{replies}
 			</div>
 		{/if}
 		{#if reposts}
-			<div class="flex">
+			<div class="stat">
 				<Repeat />
 				{reposts}
 			</div>
 		{/if}
 		{#if likes}
-			<div class="flex">
+			<div class="stat">
 				<Heart />
 				{likes}
 			</div>
 		{/if}
 		{#if views}
-			<div class="flex">
+			<div class="stat">
 				<Eye />
 				{views}
 			</div>
 		{/if}
 		{#if bookmarks}
-			<div class="flex">
+			<div class="stat">
 				<Bookmark />
 				{bookmarks}
 			</div>
@@ -87,5 +113,10 @@
 
 	.avatar {
 		border-radius: 100%;
+	}
+
+	.stat {
+		display: flex;
+		gap: 0.25rem;
 	}
 </style>
