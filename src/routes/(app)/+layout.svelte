@@ -1,8 +1,13 @@
 <script lang="ts">
 	import NavigatorPanel from '$lib/components/layout/NavigatorPanel.svelte';
 	import UtilityPanel from '$lib/components/layout/UtilityPanel.svelte';
+	import { onMount } from 'svelte';
 
 	let { children } = $props();
+
+	onMount(() => {
+		// initializeDatabase();
+	});
 </script>
 
 <div class="app-shell">

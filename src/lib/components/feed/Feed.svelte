@@ -8,12 +8,12 @@
 
 	// Create aliases so it's easier to reference in the code
 	type FeedResponse = AppBskyFeedGetFeed.OutputSchema;
-	type BlueskyPost = AppBskyFeedDefs.FeedViewPost;
+	type PostItem = AppBskyFeedDefs.FeedViewPost;
 
 	// Create the feed state.
 	// Allow both null and undefined because undefined means loading and null means error/no results
 	let cursor = $state<string>();
-	let feed: BlueskyPost[] = $state([]);
+	let feed = $state<PostItem[]>();
 
 	const searchUrl: URL | null = $derived.by(() => {
 		const searchQuery = page.url.searchParams.get('q');
@@ -27,8 +27,11 @@
 
 	$effect(() => {
 		let targetUrl: URL;
+		let usingSearch = false;
+
 		if (searchUrl) {
 			targetUrl = searchUrl;
+			usingSearch = true;
 		} else {
 			// Default feed and target URL
 			const feedUri = 'at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/whats-hot';
@@ -49,15 +52,23 @@
 				});
 
 				if (!response.ok) {
-					alert(response.status);
+					feed = [];
 					return;
 				}
-				// Get the response from the feed
-				const json: FeedResponse = await response.json();
 
-				// Set the feed and cursor from the response
-				feed = json.feed;
-				cursor = json.cursor;
+				// When searching, there's a different data type. Handle that correctly
+				if (usingSearch) {
+					// Get the response from the feed
+					const json: PostItem[] = await response.json();
+					feed = json;
+				} else {
+					// Get the response from the feed
+					const json: FeedResponse = await response.json();
+
+					// Set the feed and cursor from the response
+					feed = json.feed;
+					cursor = json.cursor;
+				}
 			} catch (error: any) {
 				// It could just be that the controller was aborted, so check
 				if (controller.signal.aborted) return;
@@ -68,6 +79,7 @@
 			}
 		};
 
+		// Run the fetch function without awaiting for it!
 		fetchFeed();
 
 		return () => {
@@ -76,26 +88,30 @@
 	});
 </script>
 
-{#if feed.length > 0}
-	{#each feed as item (item.post.uri)}
-		{#if AppBskyFeedPost.isRecord(item.post.record)}
-			<Post
-				displayName={item.post.author.displayName ?? 'Unknown user'}
-				avatar={item.post.author.avatar}
-				handle={item.post.author.handle ?? 'Unknown handle'}
-				content={(item.post.record.text as string) ?? 'asdf'}
-				facets={item.post.record.facets as AppBskyRichtextFacet.Main[]}
-				embed={item.post.embed}
-				replies={item.post.replyCount}
-				reposts={item.post.repostCount}
-				likes={item.post.likeCount}
-				bookmarks={item.post.bookmarkCount}
-			/>
-		{/if}
-	{/each}
+{#if feed}
+	{#if feed.length > 0}
+		{#each feed as item (item.post.uri)}
+			{#if AppBskyFeedPost.isRecord(item.post.record)}
+				<Post
+					displayName={item.post.author.displayName ?? 'Unknown user'}
+					avatar={item.post.author.avatar}
+					handle={item.post.author.handle ?? 'Unknown handle'}
+					content={(item.post.record.text as string) ?? 'asdf'}
+					facets={item.post.record.facets as AppBskyRichtextFacet.Main[]}
+					embed={item.post.embed}
+					replies={item.post.replyCount}
+					reposts={item.post.repostCount}
+					likes={item.post.likeCount}
+					bookmarks={item.post.bookmarkCount}
+				/>
+			{/if}
+		{/each}
+	{:else}
+		<FullPageNote
+			title={'Uh oh!'}
+			content={'There seems to be no content available. Are you logged in?'}
+		/>
+	{/if}
 {:else}
-	<FullPageNote
-		title={'Uh oh!'}
-		content={'There seems to be no content available. Are you logged in?'}
-	/>
+	<!-- Loading animation here, if wanted -->
 {/if}

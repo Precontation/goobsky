@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { resolve } from '$app/paths';
 	import { page } from '$app/state';
 	import type { Snippet } from 'svelte';
 
@@ -7,7 +6,7 @@
 	const isActive = $derived(page.url.pathname === href);
 </script>
 
-<a href={resolve(href as `/${string}`)} class="nav-button" class:active={isActive}>
+<a {href} class="nav-button" class:active={isActive}>
 	{@render children()}
 	<span class="text">{name}</span>
 </a>
@@ -26,7 +25,7 @@
 	}
 
 	.nav-button:hover {
-		background-color: var(--color-surface-hover);
+		background-color: var(--color-hover);
 	}
 
 	.active {
