@@ -322,6 +322,7 @@
 						uri={item.post.uri}
 						cid={item.post.cid}
 						displayName={item.post.author.displayName ?? 'Unknown user'}
+						isBot={item.post.author.labels?.some((label) => label.val === 'bot') ?? false}
 						avatar={item.post.author.avatar}
 						handle={item.post.author.handle ?? 'Unknown handle'}
 						isReply={item.post.record.reply as any}

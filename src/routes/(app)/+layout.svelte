@@ -3,6 +3,7 @@
 	import NavigatorPanel from '$lib/components/layout/NavigatorPanel.svelte';
 	import UtilityPanel from '$lib/components/layout/UtilityPanel.svelte';
 	import { setBskyAuthState } from '$lib/state/auth.svelte';
+	import { Tooltip } from 'bits-ui';
 	import { onMount } from 'svelte';
 
 	let { children } = $props();
@@ -18,7 +19,9 @@
 		<NavigatorPanel />
 	</div>
 	<main>
-		{@render children()}
+		<Tooltip.Provider>
+			{@render children()}</Tooltip.Provider
+		>
 	</main>
 	<div class="side-region utility-panel">
 		<UtilityPanel />

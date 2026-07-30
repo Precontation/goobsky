@@ -9,7 +9,8 @@
 		AppBskyEmbedVideo,
 		AppBskyRichtextFacet
 	} from '@atproto/api';
-	import { Bookmark, Eye, Heart, MessageSquare, Repeat, Reply } from '@lucide/svelte';
+	import { Bookmark, Bot, Eye, Heart, MessageSquare, Repeat, Reply } from '@lucide/svelte';
+	import ToolTip from '../ui/ToolTip.svelte';
 	import PostContent from './PostContent.svelte';
 	import PostEmbed from './PostEmbed.svelte';
 	import PostInteraction from './PostInteraction.svelte';
@@ -18,6 +19,7 @@
 		uri,
 		cid,
 		displayName,
+		isBot,
 		avatar,
 		handle,
 		isReply,
@@ -35,6 +37,7 @@
 		uri: string;
 		cid: string;
 		displayName: string;
+		isBot: boolean;
 		avatar?: string;
 		handle: string;
 		isReply?: boolean; // TODO: it doesn't provide the person replied to name, so you'd have to hydrate it or also render that
@@ -115,9 +118,16 @@
 			class="avatar h-10 w-10 shrink-0 self-start border border-border object-cover"
 		/>
 		<div class="flex flex-col gap-1">
-			<div>
+			<div class="flex items-center gap-1">
 				<span class="font-bold">{displayName}</span>
 				<span class="text-xs">@{handle}</span>
+				{#if isBot}
+					<ToolTip
+						trigger={Bot}
+						class="h-4 w-4"
+						content="This account has been marked as automated by its owner."
+					/>
+				{/if}
 			</div>
 			{#if isReply}
 				<div class="flex gap-1">
