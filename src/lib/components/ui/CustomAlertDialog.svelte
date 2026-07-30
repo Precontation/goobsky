@@ -21,12 +21,6 @@
 		description,
 		...restProps
 	}: Props = $props();
-
-	import { onDestroy } from 'svelte';
-	import { createWebHaptics } from 'web-haptics/svelte';
-
-	const { trigger, destroy } = createWebHaptics();
-	onDestroy(destroy);
 </script>
 
 <AlertDialog.Root bind:open {...restProps}>
@@ -49,15 +43,11 @@
 			{@render children?.()}
 			<div class="flex gap-2">
 				<AlertDialog.Cancel
-					onclick={() => trigger()}
 					class="cursor-pointer rounded-(--roundness) border border-border bg-surface p-2 hover:bg-surface-hover"
 					>Cancel</AlertDialog.Cancel
 				>
 				<AlertDialog.Action
-					onclick={() => {
-						trigger();
-						onConfirm();
-					}}
+					onclick={() => onConfirm()}
 					disabled={!confirmable}
 					class="cursor-pointer rounded-(--roundness) border border-border bg-surface p-2 hover:bg-surface-hover disabled:cursor-not-allowed disabled:bg-background"
 					>Confirm</AlertDialog.Action

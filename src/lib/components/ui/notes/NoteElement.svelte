@@ -40,12 +40,6 @@
 			isOpen = true;
 		}
 	});
-
-	import { onDestroy } from 'svelte';
-	import { createWebHaptics } from 'web-haptics/svelte';
-
-	const { trigger, destroy } = createWebHaptics();
-	onDestroy(destroy);
 </script>
 
 {#if isOpen}
@@ -57,13 +51,7 @@
 			<p>{content}</p>
 		{/if}
 		{#if dismissalId}
-			<button
-				class="close-button"
-				onclick={() => {
-					trigger();
-					close();
-				}}><X /></button
-			>
+			<button class="close-button" onclick={() => close()}><X /></button>
 		{/if}
 	</div>
 

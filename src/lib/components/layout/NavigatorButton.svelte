@@ -17,15 +17,9 @@
 		// or just if it exactly matches thats fine too
 		return page.route.id === href || page.route.id?.startsWith(href + '/');
 	});
-
-	import { onDestroy } from 'svelte';
-	import { createWebHaptics } from 'web-haptics/svelte';
-
-	const { trigger, destroy } = createWebHaptics();
-	onDestroy(destroy);
 </script>
 
-<a href={resolve(href)} class="nav-button" class:active={isActive} onclick={() => trigger()}>
+<a href={resolve(href)} class="nav-button" class:active={isActive}>
 	{@render children()}
 	<span class="text">{name}</span>
 </a>

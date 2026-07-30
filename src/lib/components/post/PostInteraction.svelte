@@ -32,7 +32,6 @@
 	let isToggling = $state(false);
 	const toggleInteraction = async () => {
 		if (isToggling) return;
-		trigger();
 		isToggling = true;
 		const oldInteractionUri = interactionUri;
 		const oldCount = count;
@@ -63,12 +62,6 @@
 			isToggling = false;
 		}
 	};
-
-	import { onDestroy } from 'svelte';
-	import { createWebHaptics } from 'web-haptics/svelte';
-
-	const { trigger, destroy } = createWebHaptics();
-	onDestroy(destroy);
 </script>
 
 {#if count !== undefined}
