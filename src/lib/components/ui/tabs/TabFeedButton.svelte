@@ -10,9 +10,15 @@
 		// e.g. /home/discover/asdfasdf/ would not still highlight page
 		return page.route.id === href;
 	});
+
+	import { onDestroy } from 'svelte';
+	import { createWebHaptics } from 'web-haptics/svelte';
+
+	const { trigger, destroy } = createWebHaptics();
+	onDestroy(destroy);
 </script>
 
-<a href={resolve(href)} class="tab-button" class:active={isActive}>
+<a href={resolve(href)} class="tab-button" class:active={isActive} onclick={() => trigger()}>
 	{#if children}
 		{@render children()}
 	{/if}

@@ -51,6 +51,7 @@
 		"@lucide/svelte": "^1.27.0",
 		"@tanstack/svelte-query": "^6.1.38",
 		"bits-ui": "^2.18.1",
-		"hls.js": "^1.6.16"
+		"hls.js": "^1.6.16",
+		"web-haptics": "^0.0.5"
 	}
 }

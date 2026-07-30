@@ -35,6 +35,9 @@ importers:
       hls.js:
         specifier: ^1.6.16
         version: 1.6.16
+      web-haptics:
+        specifier: ^0.0.5
+        version: 0.0.5(svelte@5.56.8(@typescript-eslint/types@8.65.0))
     devDependencies:
       '@eslint/js':
         specifier: ^10.0.1
@@ -1881,6 +1884,23 @@ packages:
       jsdom:
         optional: true
 
+  web-haptics@0.0.5:
+    resolution: {integrity: sha512-Cg7aCOB5U/ZIN6zgkl1BkBG11hSuIw+qX7W2hqjYav35FzrBTER7QAUtTWDo26Rv3S6HLAcOzXFFIXe28dWXJQ==}
+    peerDependencies:
+      react: '>=18'
+      react-dom: '>=18'
+      svelte: '>=4'
+      vue: '>=3'
+    peerDependenciesMeta:
+      react:
+        optional: true
+      react-dom:
+        optional: true
+      svelte:
+        optional: true
+      vue:
+        optional: true
+
   which@2.0.2:
     resolution: {integrity: sha512-BLI3Tl1TW3Pvl70l3yq3Y64i+awpwXqsGBYWkkqMtnbXgrMD+yj7rhW0kuEDxzJaYXGjEW5ogapKNMEKNMjibA==}
     engines: {node: '>= 8'}
@@ -3599,6 +3619,10 @@ snapshots:
       '@vitest/browser-playwright': 4.1.10(playwright@1.62.0)(vite@8.1.5(@types/node@24.13.3)(jiti@2.7.0))(vitest@4.1.10)
     transitivePeerDependencies:
       - msw
+
+  web-haptics@0.0.5(svelte@5.56.8(@typescript-eslint/types@8.65.0)):
+    optionalDependencies:
+      svelte: 5.56.8(@typescript-eslint/types@8.65.0)
 
   which@2.0.2:
     dependencies:
