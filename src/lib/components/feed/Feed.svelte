@@ -12,7 +12,7 @@
 		type AppBskyFeedSearchPosts,
 		type AppBskyRichtextFacet
 	} from '@atproto/api';
-	import LoadingSpinner from '../ui/LoadingSpinner.svelte';
+	import FullPageSpinner from '../ui/FullPageSpinner.svelte';
 
 	// Import app so you can do app.bsky.feed.searchPosts
 
@@ -299,7 +299,5 @@
 		<FullPageNote title={'Uh oh!'} content={'There seems to be an error. Are you logged in?'} />
 	{/if}
 {:else}
-	<div class="flex h-full w-full items-center justify-center">
-		<LoadingSpinner />
-	</div>
+	<FullPageSpinner />
 {/if}

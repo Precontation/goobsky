@@ -16,7 +16,7 @@
 	});
 </script>
 
-<div class="block whitespace-pre-wrap">
+<div class="wrap block wrap-anywhere whitespace-pre-wrap">
 	{#each completedContent as element}
 		{#if element.isLink()}
 			<a href={element.link?.uri} class="link">{element.text}</a>
