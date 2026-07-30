@@ -24,8 +24,9 @@
 	muted
 	playsinline
 	poster={thumbnail}
-	class={`media-player ${className}`}
-	style={`aspect-ratio: ${aspectWidth} / ${aspectHeight}; width: min(100%, 45dvh * ${aspectWidth} / ${aspectHeight})`}
+	class="media-player {className}"
+	style:aspect-ratio="{aspectWidth} / {aspectHeight}"
+	style:width="min(100%, 45dvh * {aspectWidth} / {aspectHeight})"
 >
 </video>
 

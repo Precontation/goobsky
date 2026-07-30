@@ -4,7 +4,7 @@
 </script>
 
 <aside>
-	<form action="/public-feed">
+	<form action="/search">
 		<label class="search-container">
 			<Search class="shrink-0" />
 			<input name="q" placeholder="Search" class="w-full" />

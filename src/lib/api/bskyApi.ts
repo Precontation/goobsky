@@ -1,4 +1,4 @@
-import { loadSession, saveSession } from '$lib/storage/sessions';
+import { loadSession, removeSession, saveSession } from '$lib/storage/sessions';
 import { Agent, CredentialSession } from '@atproto/api';
 
 const sessionName = 'bsky';
@@ -8,6 +8,7 @@ export const bskySession = new CredentialSession(
 	globalThis.fetch,
 	async (evt, session) => {
 		if ((evt === 'create' || evt === 'update') && session) {
+			restorePromise = Promise.resolve(true);
 			await saveSession(sessionName, session);
 		}
 	}
@@ -16,15 +17,31 @@ export const bskySession = new CredentialSession(
 export const bskyAgent = new Agent(bskySession);
 
 // ----- HELPERS -----
-export const restoreBskySession = async () => {
-	const restoredSession = await loadSession(sessionName);
+let restorePromise: Promise<boolean> | undefined;
+export const restoreBskySession = () => {
+	// If the promise already exists, return it
+	if (restorePromise) return restorePromise;
 
-	if (!restoredSession) return;
+	restorePromise = (async () => {
+		const restoredSession = await loadSession(sessionName);
 
-	const response = await bskySession.resumeSession(restoredSession);
-	if (response.success) {
-		console.log('Successfully resumed session!');
-	} else {
-		console.warn('Failed to load session!');
-	}
+		if (!restoredSession) return false;
+
+		const response = await bskySession.resumeSession(restoredSession);
+
+		if (!response.success) {
+			throw new Error('Failed to restore Bluesky session');
+		}
+
+		return true;
+	})();
+
+	return restorePromise;
+};
+
+export const signOutBskySession = async (): Promise<boolean> => {
+	await bskySession.logout();
+	const deletedSession = await removeSession(sessionName);
+	restorePromise = undefined;
+	return deletedSession;
 };

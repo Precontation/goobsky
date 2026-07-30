@@ -1,7 +1,6 @@
 import { IDB_DATABASE_NAME } from '$lib/config';
 
 let dbPromise: Promise<IDBDatabase> | undefined;
-
 export const initializeDatabase = () => {
 	// If the promise already exists, return it
 	if (dbPromise) return dbPromise;

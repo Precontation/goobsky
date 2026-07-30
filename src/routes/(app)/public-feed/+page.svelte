@@ -1,6 +1,6 @@
 <script>
 	import Feed from '$lib/components/feed/Feed.svelte';
-	import NoteElement from '$lib/components/post/NoteElement.svelte';
+	import NoteElement from '$lib/components/ui/notes/NoteElement.svelte';
 </script>
 
 <NoteElement
@@ -9,4 +9,4 @@
 	dismissalId="public-feed-whats-this"
 />
 
-<Feed />
+<Feed feedType="public" />

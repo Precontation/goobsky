@@ -2,12 +2,14 @@
 	import { restoreBskySession } from '$lib/api/bskyApi';
 	import NavigatorPanel from '$lib/components/layout/NavigatorPanel.svelte';
 	import UtilityPanel from '$lib/components/layout/UtilityPanel.svelte';
+	import { setBskyAuthState } from '$lib/state/auth.svelte';
 	import { onMount } from 'svelte';
 
 	let { children } = $props();
 
-	onMount(() => {
-		restoreBskySession();
+	onMount(async () => {
+		const hasSession = await restoreBskySession();
+		setBskyAuthState(hasSession ? 'authenticated' : 'unauthenticated');
 	});
 </script>
 

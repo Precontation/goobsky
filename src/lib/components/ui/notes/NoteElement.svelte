@@ -3,7 +3,7 @@
 	import { X } from '@lucide/svelte';
 	import { onMount } from 'svelte';
 
-	let { title, content, dismissalId }: { title: string; content: string; dismissalId?: string } =
+	let { title, content, dismissalId }: { title?: string; content?: string; dismissalId?: string } =
 		$props();
 
 	// The variable for is open, OFF by default to prevent flashing
@@ -44,8 +44,12 @@
 
 {#if isOpen}
 	<div class="note-container">
-		<h2>{title}</h2>
-		<p>{content}</p>
+		{#if title}
+			<h2>{title}</h2>
+		{/if}
+		{#if content}
+			<p>{content}</p>
+		{/if}
 		{#if dismissalId}
 			<button class="close-button" onclick={() => close()}><X /></button>
 		{/if}
