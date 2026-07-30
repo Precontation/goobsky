@@ -1,6 +1,6 @@
 <script>
 	import Icon from '$lib/assets/branding/Icon.svelte';
-	import { HatGlasses, House, Settings } from '@lucide/svelte';
+	import { Bookmark, HatGlasses, House, Settings } from '@lucide/svelte';
 	import NavigatorButton from './NavigatorButton.svelte';
 </script>
 
@@ -10,6 +10,7 @@
 	</a>
 	<NavigatorButton href="/(app)/(home)" name="Home"><House /></NavigatorButton>
 	<NavigatorButton href="/(app)/public-feed" name="Public Feed"><HatGlasses /></NavigatorButton>
+	<NavigatorButton href="/(app)/saved" name="Saved"><Bookmark /></NavigatorButton>
 	<NavigatorButton href="/(app)/settings" name="Settings"><Settings /></NavigatorButton>
 </nav>
 

@@ -26,7 +26,7 @@
 		cursor?: string;
 	};
 
-	type FeedType = 'public' | 'discover' | 'following' | 'search';
+	type FeedType = 'public' | 'discover' | 'following' | 'saved' | 'search';
 
 	let { feedType, query }: { feedType: FeedType; query?: string | null } = $props();
 
@@ -148,6 +148,44 @@
 		return null;
 	};
 
+	// Loads the user's saved posts (logged in only).
+	const loadSaved = async (signal: AbortSignal, agent: Agent): Promise<LoadedFeed | null> => {
+		const restored = await restoreBskySession(); // TODO: await restore __ session, not necessarily only Bluesky
+
+		if (!restored) {
+			console.error('Failed to restore session on loading timeline!');
+			return null;
+		}
+
+		const { data, success } = await agent.app.bsky.bookmark.getBookmarks(
+			{
+				// Initial loading doesn't need a cursor
+				// TODO: maybe a page param like ?cursor= or something
+			},
+			{
+				headers: {
+					'Accept-Language': PREFERRED_LANGUAGES
+				}
+			}
+		);
+
+		if (success) {
+			// Return the loaded feed so it doesn't fetch a second time!
+			return {
+				items: data.bookmarks.flatMap((bookmark) => {
+					if (!AppBskyFeedDefs.isPostView(bookmark.item)) return [];
+
+					return [{ post: bookmark.item }];
+				})
+			};
+		} else {
+			console.error('Failed to get timeline feed.');
+			// Optionally try to fetch logged out, however I personally want it to clearly show you're logged out
+		}
+
+		return null;
+	};
+
 	// Loads the search results. On Bluesky for example, this requires a login. However, some platforms may not, and that's why the param is optional.
 	const loadSearchResults = async (
 		query: string,
@@ -253,6 +291,9 @@
 				case 'following':
 					loadedFeed = await loadFollowing(controller.signal, bskyAgent);
 					break;
+				case 'saved':
+					loadedFeed = await loadSaved(controller.signal, bskyAgent);
+					break;
 				case 'search':
 					if (!query) break;
 					loadedFeed = await loadSearchResults(query, controller.signal, bskyAgent);
@@ -292,6 +333,7 @@
 						likes={item.post.likeCount}
 						likedUri={feedType === 'public' ? null : item.post.viewer?.like}
 						bookmarks={item.post.bookmarkCount}
+						bookmarked={feedType === 'public' ? null : item.post.viewer?.bookmarked}
 					/>
 				{/if}
 			{/each}

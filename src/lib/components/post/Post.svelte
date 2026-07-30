@@ -29,7 +29,8 @@
 		likes,
 		likedUri,
 		views, // Not available in Bluesky, but they may in others, so keep
-		bookmarks
+		bookmarks,
+		bookmarked
 	}: {
 		uri: string;
 		cid: string;
@@ -52,9 +53,10 @@
 		replies?: number;
 		reposts?: number;
 		likes?: number;
-		likedUri?: string | null; // If liked is null that means the user is logged out or something and is unable to like. Undefined just means unliked.
+		likedUri?: string | null; // If likedUri is null that means the user is logged out or something and is unable to like. Undefined just means logged in but not liked.
 		views?: number;
 		bookmarks?: number;
+		bookmarked?: boolean | null; // If bookmarkedUri is null that means the user is logged out or something and is unable to bookmark. Undefined just means logged in but not bookmarked.
 	} = $props();
 
 	// svelte-ignore state_referenced_locally
@@ -143,13 +145,35 @@
 				return newUri;
 			}}
 			remove={async (removeUri) => {
-				return await bskyAgent.deleteLike(removeUri);
+				await bskyAgent.deleteLike(removeUri);
 			}}
 			toggleable={true}
 			fillWhenToggled={true}
 		/>
 		<PostInteraction icon={Eye} count={views} />
-		<PostInteraction icon={Bookmark} count={bookmarks} />
+		<PostInteraction
+			icon={Bookmark}
+			count={bookmarks}
+			targetUri={uri}
+			targetCid={cid}
+			interactionUri={bookmarked === true ? uri : bookmarked === false ? undefined : null}
+			create={async (createUri, createCid) => {
+				await bskyAgent.app.bsky.bookmark.createBookmark({
+					uri: createUri,
+					cid: createCid
+				});
+
+				// Return the create uri because then when unsaving it it can
+				return createUri;
+			}}
+			remove={async (removeUri) => {
+				await bskyAgent.app.bsky.bookmark.deleteBookmark({
+					uri: removeUri
+				});
+			}}
+			toggleable={true}
+			fillWhenToggled={true}
+		/>
 	</div>
 </article>
 
