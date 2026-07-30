@@ -278,6 +278,8 @@
 			{#each loadedFeed.items as item (item.post.uri)}
 				{#if AppBskyFeedPost.isRecord(item.post.record)}
 					<Post
+						uri={item.post.uri}
+						cid={item.post.cid}
 						displayName={item.post.author.displayName ?? 'Unknown user'}
 						avatar={item.post.author.avatar}
 						handle={item.post.author.handle ?? 'Unknown handle'}
@@ -288,6 +290,7 @@
 						replies={item.post.replyCount}
 						reposts={item.post.repostCount}
 						likes={item.post.likeCount}
+						likedUri={feedType === 'public' ? null : item.post.viewer?.like}
 						bookmarks={item.post.bookmarkCount}
 					/>
 				{/if}

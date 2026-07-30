@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { bskyAgent } from '$lib/api/bskyApi';
 	import {
 		AppBskyEmbedExternal,
 		AppBskyEmbedGallery,
@@ -11,8 +12,11 @@
 	import { Bookmark, Eye, Heart, MessageSquare, Repeat, Reply } from '@lucide/svelte';
 	import PostContent from './PostContent.svelte';
 	import PostEmbed from './PostEmbed.svelte';
+	import PostInteraction from './PostInteraction.svelte';
 
 	let {
+		uri,
+		cid,
 		displayName,
 		avatar,
 		handle,
@@ -23,9 +27,12 @@
 		replies,
 		reposts,
 		likes,
+		likedUri,
 		views, // Not available in Bluesky, but they may in others, so keep
 		bookmarks
 	}: {
+		uri: string;
+		cid: string;
 		displayName: string;
 		avatar?: string;
 		handle: string;
@@ -45,9 +52,56 @@
 		replies?: number;
 		reposts?: number;
 		likes?: number;
+		likedUri?: string | null; // If liked is null that means the user is logged out or something and is unable to like. Undefined just means unliked.
 		views?: number;
 		bookmarks?: number;
 	} = $props();
+
+	// svelte-ignore state_referenced_locally
+	let liked: boolean | null = $state(likedUri === null ? null : likedUri !== undefined);
+	// svelte-ignore state_referenced_locally
+	let localLikes: number | undefined = $state(likes);
+	// svelte-ignore state_referenced_locally
+	let localLikedUri: string | null | undefined = $state(likedUri);
+
+	let isLiking = $state(false);
+	const togglePostLiked = async () => {
+		if (localLikedUri === null) return;
+		if (isLiking) return;
+
+		const prevLiked = liked;
+		const prevLikedUri = localLikedUri;
+		const prevLocalLikes = localLikes;
+
+		isLiking = true;
+		liked = !liked;
+
+		try {
+			if (!liked) {
+				// Since we flipped liked we have to kinda think flipped
+				if (localLikedUri) {
+					// Change the number displayed
+					if (localLikes !== undefined) localLikes -= 1;
+
+					await bskyAgent.deleteLike(localLikedUri);
+					localLikedUri = undefined;
+				}
+			} else {
+				// Change the number displayed
+				if (localLikes !== undefined) localLikes += 1;
+
+				const { uri: newLikeUri, cid: newLikeCid } = await bskyAgent.like(uri, cid);
+				localLikedUri = newLikeUri;
+			}
+		} catch {
+			// Probably hit a rate limit
+			liked = prevLiked;
+			localLikedUri = prevLikedUri;
+			localLikes = prevLocalLikes;
+		} finally {
+			isLiking = false;
+		}
+	};
 </script>
 
 <article>
@@ -76,36 +130,26 @@
 		</div>
 	</div>
 	<div class="flex gap-5">
-		{#if replies !== undefined}
-			<div class="stat">
-				<MessageSquare />
-				{replies}
-			</div>
-		{/if}
-		{#if reposts !== undefined}
-			<div class="stat">
-				<Repeat />
-				{reposts}
-			</div>
-		{/if}
-		{#if likes !== undefined}
-			<div class="stat">
-				<Heart />
-				{likes}
-			</div>
-		{/if}
-		{#if views !== undefined}
-			<div class="stat">
-				<Eye />
-				{views}
-			</div>
-		{/if}
-		{#if bookmarks !== undefined}
-			<div class="stat">
-				<Bookmark />
-				{bookmarks}
-			</div>
-		{/if}
+		<PostInteraction icon={MessageSquare} count={replies} />
+		<PostInteraction icon={Repeat} count={reposts} />
+		<PostInteraction
+			icon={Heart}
+			count={likes}
+			targetUri={uri}
+			targetCid={cid}
+			interactionUri={likedUri}
+			create={async (createUri, createCid) => {
+				const { uri: newUri, cid: newCid } = await bskyAgent.like(createUri, createCid);
+				return newUri;
+			}}
+			remove={async (removeUri) => {
+				return await bskyAgent.deleteLike(removeUri);
+			}}
+			toggleable={true}
+			fillWhenToggled={true}
+		/>
+		<PostInteraction icon={Eye} count={views} />
+		<PostInteraction icon={Bookmark} count={bookmarks} />
 	</div>
 </article>
 
@@ -122,10 +166,5 @@
 
 	.avatar {
 		border-radius: 100%;
-	}
-
-	.stat {
-		display: flex;
-		gap: 0.25rem;
 	}
 </style>

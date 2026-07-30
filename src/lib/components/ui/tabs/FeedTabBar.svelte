@@ -21,7 +21,9 @@
 <style>
 	.tab-container {
 		background-color: var(--color-background);
-		position: relative;
+		position: sticky;
+		top: 0;
+		z-index: 1;
 		display: flex;
 		border-bottom: 1px solid var(--color-border);
 	}
