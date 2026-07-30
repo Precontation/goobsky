@@ -8,7 +8,7 @@
 		AppBskyEmbedVideo,
 		AppBskyRichtextFacet
 	} from '@atproto/api';
-	import { Bookmark, Eye, Heart, MessageSquare, Repeat } from '@lucide/svelte';
+	import { Bookmark, Eye, Heart, MessageSquare, Repeat, Reply } from '@lucide/svelte';
 	import PostContent from './PostContent.svelte';
 	import PostEmbed from './PostEmbed.svelte';
 
@@ -16,6 +16,7 @@
 		displayName,
 		avatar,
 		handle,
+		isReply,
 		content,
 		facets,
 		embed,
@@ -28,6 +29,7 @@
 		displayName: string;
 		avatar?: string;
 		handle: string;
+		isReply?: boolean; // TODO: it doesn't provide the person replied to name, so you'd have to hydrate it or also render that
 		content: string;
 		facets?: AppBskyRichtextFacet.Main[];
 		embed?:
@@ -61,6 +63,12 @@
 				<span class="font-bold">{displayName}</span>
 				<span class="text-xs">@{handle}</span>
 			</div>
+			{#if isReply}
+				<div class="flex gap-1">
+					<Reply class="h-4 w-4 rotate-180" />
+					<span class="text-xs">Is a reply</span>
+				</div>
+			{/if}
 			<PostContent {content} {facets} />
 			{#if embed}
 				<PostEmbed {embed} />

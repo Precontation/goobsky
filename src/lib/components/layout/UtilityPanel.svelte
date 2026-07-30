@@ -46,7 +46,7 @@
 
 	/* Hovering */
 	.search-container:hover {
-		border: 1px solid var(--color-hover);
+		border: 1px solid var(--color-border-hover);
 	}
 
 	/* Focused (text area selected) */

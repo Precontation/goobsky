@@ -38,4 +38,10 @@
 	.tag {
 		color: var(--color-primary);
 	}
+
+	.link:hover,
+	.mention:hover,
+	.tag:hover {
+		text-decoration: underline;
+	}
 </style>

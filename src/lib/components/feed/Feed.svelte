@@ -4,14 +4,14 @@
 	import Post from '$lib/components/post/Post.svelte';
 	import FullPageNote from '$lib/components/ui/notes/FullPageNote.svelte';
 	import { PREFERRED_LANGUAGES } from '$lib/config';
-	import type {
-		Agent,
+	import {
 		AppBskyFeedDefs,
-		AppBskyFeedGetFeed,
-		AppBskyFeedSearchPosts,
-		AppBskyRichtextFacet
+		AppBskyFeedPost,
+		type Agent,
+		type AppBskyFeedGetFeed,
+		type AppBskyFeedSearchPosts,
+		type AppBskyRichtextFacet
 	} from '@atproto/api';
-	import { AppBskyFeedPost } from '@atproto/api';
 	import LoadingSpinner from '../ui/LoadingSpinner.svelte';
 
 	// Import app so you can do app.bsky.feed.searchPosts
@@ -281,6 +281,7 @@
 						displayName={item.post.author.displayName ?? 'Unknown user'}
 						avatar={item.post.author.avatar}
 						handle={item.post.author.handle ?? 'Unknown handle'}
+						isReply={item.post.record.reply as any}
 						content={(item.post.record.text as string) ?? 'asdf'}
 						facets={item.post.record.facets as AppBskyRichtextFacet.Main[]}
 						embed={item.post.embed}

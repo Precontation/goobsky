@@ -23,5 +23,6 @@
 		background-color: var(--color-background);
 		position: relative;
 		display: flex;
+		border-bottom: 1px solid var(--color-border);
 	}
 </style>
