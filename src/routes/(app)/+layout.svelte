@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { restoreBskySession } from '$lib/api/bskyApi';
 	import NavigatorPanel from '$lib/components/layout/NavigatorPanel.svelte';
 	import UtilityPanel from '$lib/components/layout/UtilityPanel.svelte';
 	import { onMount } from 'svelte';
@@ -6,7 +7,7 @@
 	let { children } = $props();
 
 	onMount(() => {
-		// initializeDatabase();
+		restoreBskySession();
 	});
 </script>
 

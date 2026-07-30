@@ -11,8 +11,6 @@
 			facets: facets
 		});
 
-		console.log('Content is: ', content.toString());
-		console.log('Facets are: ', facets?.toString());
 		// Return the segments
 		return rt.segments();
 	});
