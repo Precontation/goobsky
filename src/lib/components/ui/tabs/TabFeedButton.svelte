@@ -43,10 +43,4 @@
 		background-color: var(--color-surface);
 		color: var(--color-primary);
 	}
-
-	@media (width < 1300px) {
-		.text {
-			display: none;
-		}
-	}
 </style>

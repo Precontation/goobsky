@@ -8,7 +8,7 @@
 
 <PinInput.Root
 	bind:value
-	class="group/pininput text-foreground flex items-center has-disabled:opacity-30"
+	class="group/pininput text-foreground flex w-full min-w-0 shrink items-center has-disabled:opacity-30"
 	maxlength={length}
 	pattern={REGEXP_ONLY_DIGITS_AND_CHARS}
 	pasteTransformer={(text: string) => {
@@ -23,7 +23,7 @@
 	}}
 >
 	{#snippet children({ cells })}
-		<div class="flex">
+		<div class="flex min-w-0 flex-1">
 			{#each cells.slice(0, length / 2) as cell, i (i)}
 				{@render Cell(cell)}
 			{/each}
@@ -33,7 +33,7 @@
 			<div class="h-1 w-3 rounded-full bg-border"></div>
 		</div>
 
-		<div class="flex">
+		<div class="flex min-w-0 flex-1">
 			{#each cells.slice(length / 2, length) as cell, i (i)}
 				{@render Cell(cell)}
 			{/each}
@@ -44,7 +44,7 @@
 {#snippet Cell(cell: CellProps)}
 	<PinInput.Cell
 		{cell}
-		class="focus-override border-foreground/20 text-foreground group-focus-within/pininput:border-foreground/40 group-hover/pininput:border-foreground/40 relative flex h-14 w-10 items-center justify-center border-y border-r text-[2rem] outline-0 transition-all duration-75 first:rounded-l-md first:border-l last:rounded-r-md data-active:outline-1 data-active:outline-white"
+		class="focus-override border-foreground/20 text-foreground group-focus-within/pininput:border-foreground/40 group-hover/pininput:border-foreground/40 relative flex h-14 w-full items-center justify-center border-y border-r text-[2rem] outline-0 transition-all duration-75 first:rounded-l-md first:border-l last:rounded-r-md data-active:outline-1 data-active:outline-white"
 	>
 		{#if cell.char !== null}
 			<div>
