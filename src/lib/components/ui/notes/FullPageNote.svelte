@@ -45,7 +45,7 @@
 {#if isOpen}
 	<div class="full-page-note-container">
 		<h2>{title}</h2>
-		<p>{content}</p>
+		<p class="text-center">{content}</p>
 		{#if dismissalId}
 			<button class="close-button" onclick={() => close()}><X /></button>
 		{/if}

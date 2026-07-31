@@ -28,7 +28,7 @@
 	--color-danger: var(--theme-danger);
 
 	/* Not color related stuff :) */
-	--post-padding: var(--post-padding);
+	--spacing-post: var(--post-padding);
 	--roundness: var(--roundness);
 }
 

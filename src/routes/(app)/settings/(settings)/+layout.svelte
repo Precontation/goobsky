@@ -1,6 +1,5 @@
 <!-- TODO: have this be like the right sidebar maybe? That could be cool where you can still see the main settings page -->
 <script>
-	import { resolve } from '$app/paths';
 	import { page } from '$app/state';
 	import { ChevronLeft } from '@lucide/svelte';
 	import { Button } from 'bits-ui';
@@ -10,7 +9,7 @@
 
 <div class="flex gap-2 p-8">
 	<Button.Root
-		href={resolve('/(app)/settings')}
+		onclick={() => history.back()}
 		class=" h-fit w-fit items-center  rounded-full hover:bg-hover"
 	>
 		<ChevronLeft size="35" />

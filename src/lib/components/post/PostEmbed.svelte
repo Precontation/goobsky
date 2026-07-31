@@ -78,7 +78,7 @@
 		>
 	</Button.Root>
 {:else if AppBskyEmbedRecord.isView(embed.embed)}
-	<QuotePost embed={embed.embed} />
+	<QuotePost embed={embed.embed.record} />
 {:else if AppBskyEmbedRecordWithMedia.isView(embed.embed)}
 	<PostEmbed embed={embed.embed.media}></PostEmbed>
 	<QuotePost embed={embed.embed.record} />

@@ -4,6 +4,7 @@
 	import Post from '$lib/components/post/Post.svelte';
 	import FullPageNote from '$lib/components/ui/notes/FullPageNote.svelte';
 	import { PREFERRED_LANGUAGES } from '$lib/config';
+	import type { PostItem } from '$lib/helpers/atProto.svelte';
 	import {
 		AppBskyFeedDefs,
 		AppBskyFeedPost,
@@ -18,7 +19,6 @@
 
 	// Create aliases so it's easier to reference in the code
 	type FeedResponse = AppBskyFeedGetFeed.OutputSchema;
-	type PostItem = AppBskyFeedDefs.FeedViewPost;
 
 	// Create the loaded feed state.
 	type LoadedFeed = {
@@ -335,6 +335,8 @@
 						likedUri={feedType === 'public' ? null : item.post.viewer?.like}
 						bookmarks={item.post.bookmarkCount}
 						bookmarked={feedType === 'public' ? null : item.post.viewer?.bookmarked}
+						hasBottomBorder={true}
+						isClickable={true}
 					/>
 				{/if}
 			{/each}

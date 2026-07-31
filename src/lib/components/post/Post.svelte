@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { resolve } from '$app/paths';
 	import { bskyAgent } from '$lib/api/bskyApi';
 	import {
 		AppBskyEmbedExternal,
@@ -10,6 +11,7 @@
 		AppBskyRichtextFacet
 	} from '@atproto/api';
 	import { Bookmark, Bot, Eye, Heart, MessageSquare, Repeat, Reply } from '@lucide/svelte';
+	import { Button } from 'bits-ui';
 	import ToolTip from '../ui/ToolTip.svelte';
 	import PostContent from './PostContent.svelte';
 	import PostEmbed from './PostEmbed.svelte';
@@ -32,7 +34,9 @@
 		likedUri,
 		views, // Not available in Bluesky, but they may in others, so keep
 		bookmarks,
-		bookmarked
+		bookmarked,
+		hasBottomBorder,
+		isClickable
 	}: {
 		uri: string;
 		cid: string;
@@ -60,6 +64,8 @@
 		views?: number;
 		bookmarks?: number;
 		bookmarked?: boolean | null; // If bookmarkedUri is null that means the user is logged out or something and is unable to bookmark. Undefined just means logged in but not bookmarked.
+		hasBottomBorder: boolean; // If this is false it's probably a quote post where you don't want a bottom border.
+		isClickable: boolean; // If this is true then it's most likely in the feed. If it's false then it probably is already on the post page
 	} = $props();
 
 	// svelte-ignore state_referenced_locally
@@ -109,16 +115,30 @@
 	};
 </script>
 
-<article>
+<article
+	class="{hasBottomBorder ? 'border-b border-border' : ''} {isClickable
+		? 'cursor-pointer hover:bg-hover'
+		: ''}"
+>
+	<Button.Root
+		class="absolute top-0 right-0 bottom-0 left-0 z-0"
+		href={isClickable
+			? resolve('/(app)/post/[did]/[rkey]', {
+					did: uri.split('/').at(2) ?? 'undefined',
+					rkey: uri.split('/').at(-1) ?? 'undefined'
+				})
+			: ''}
+	></Button.Root>
+
 	<div class="flex gap-2">
 		<img
 			loading="lazy"
 			src={avatar}
 			alt=""
-			class="avatar h-10 w-10 shrink-0 self-start border border-border object-cover"
+			class="avatar z-10 h-10 w-10 shrink-0 self-start border border-border object-cover"
 		/>
 		<div class="flex flex-col gap-1">
-			<div class="flex items-center gap-1">
+			<div class="z-10 flex w-fit items-center gap-1">
 				<span class="font-bold">{displayName}</span>
 				<span class="text-xs">@{handle}</span>
 				{#if isBot}
@@ -129,19 +149,24 @@
 					/>
 				{/if}
 			</div>
+
 			{#if isReply}
-				<div class="flex gap-1">
+				<div class="z-10 flex w-fit gap-1">
 					<Reply class="h-4 w-4 rotate-180" />
 					<span class="text-xs">Is a reply</span>
 				</div>
 			{/if}
+
 			<PostContent {content} {facets} />
-			{#if embed}
-				<PostEmbed {embed} />
-			{/if}
+
+			<div class="z-10">
+				{#if embed}
+					<PostEmbed {embed} />
+				{/if}
+			</div>
 		</div>
 	</div>
-	<div class="flex gap-5">
+	<div class="z-1 flex w-fit gap-5">
 		<PostInteraction icon={MessageSquare} count={replies} />
 		<PostInteraction icon={Repeat} count={reposts} />
 		<PostInteraction
@@ -191,7 +216,6 @@
 	article {
 		padding: var(--post-padding);
 		position: relative;
-		border-bottom: 1px solid var(--color-border);
 
 		display: flex;
 		flex-direction: column;
