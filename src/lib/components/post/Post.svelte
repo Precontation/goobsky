@@ -74,15 +74,17 @@
 		? 'cursor-pointer hover:bg-hover'
 		: ''}"
 >
-	<Button.Root
-		class="absolute top-0 right-0 bottom-0 left-0 z-0"
-		href={isClickable
-			? resolve('/(app)/post/[did]/[rkey]', {
-					did: post.uri.split('/').at(2) ?? 'undefined',
-					rkey: post.uri.split('/').at(-1) ?? 'undefined'
-				})
-			: ''}
-	></Button.Root>
+	{#if isClickable}
+		<Button.Root
+			class="absolute top-0 right-0 bottom-0 left-0 z-0"
+			href={isClickable
+				? resolve('/(app)/post/[did]/[rkey]', {
+						did: post.uri.split('/').at(2) ?? 'undefined',
+						rkey: post.uri.split('/').at(-1) ?? 'undefined'
+					})
+				: ''}
+		/>
+	{/if}
 
 	<div class="flex gap-2">
 		<img

@@ -1,10 +1,10 @@
+<!-- TODO: implement tanstack -->
 <script lang="ts">
 	// Import the bluesky post types
 	import { bskyAgent, restoreBskySession } from '$lib/api/bskyApi';
 	import Post from '$lib/components/post/Post.svelte';
 	import FullPageNote from '$lib/components/ui/notes/FullPageNote.svelte';
 	import { PREFERRED_LANGUAGES } from '$lib/config';
-	import type { PostItem } from '$lib/helpers/atProto.svelte';
 	import {
 		AppBskyFeedDefs,
 		AppBskyFeedPost,
@@ -17,6 +17,7 @@
 	// Import app so you can do app.bsky.feed.searchPosts
 
 	// Create aliases so it's easier to reference in the code
+	export type PostItem = AppBskyFeedDefs.FeedViewPost;
 	type FeedResponse = AppBskyFeedGetFeed.OutputSchema;
 
 	// Create the loaded feed state.

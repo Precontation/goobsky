@@ -4,33 +4,43 @@
 	import Post from '$lib/components/post/Post.svelte';
 	import FullPageSpinner from '$lib/components/ui/FullPageSpinner.svelte';
 	import FullPageNote from '$lib/components/ui/notes/FullPageNote.svelte';
-	import { getPosts, type PostItem } from '$lib/helpers/atProto.svelte';
+	import { getPostThread, type ThreadItem } from '$lib/helpers/atProto.svelte';
+	import { AppBskyFeedDefs } from '@atproto/api';
 	import { ChevronLeft } from '@lucide/svelte';
 	import { Button } from 'bits-ui';
-	import { onMount } from 'svelte';
 
-	let loadingPosts: boolean = $state(false);
-	let posts = $state<PostItem[]>();
+	let loadingPosts: boolean = $state(true);
+	let thread = $state<ThreadItem | null>();
 
-	onMount(async () => {
+	$effect(() => {
+		let cancelled = false;
+
 		if (!page.params.did || !page.params.rkey) {
-			posts = [];
+			loadingPosts = false;
+			thread = null;
 			return;
 		}
 
-		console.log(page.params.did);
-		loadingPosts = true;
+		const loadPosts = async (did: string, rkey: string) => {
+			try {
+				const loadedThread = await getPostThread(
+					`at://${did}/app.bsky.feed.post/${rkey}`,
+					bskyAgent
+				); // TODO: not hardcode bskyAgent
+				if (!cancelled) thread = loadedThread;
+			} catch {
+				if (!cancelled) thread = null;
+			} finally {
+				if (!cancelled) loadingPosts = false;
+			}
+		};
 
-		try {
-			posts = await getPosts(
-				`at://${page.params.did}/app.bsky.feed.post/${page.params.rkey}`,
-				bskyAgent
-			); // TODO: not hardcode bskyAgent
-		} catch {
-			posts = [];
-		} finally {
-			loadingPosts = false;
-		}
+		loadingPosts = true;
+		loadPosts(page.params.did, page.params.rkey);
+
+		return () => {
+			cancelled = true;
+		};
 	});
 </script>
 
@@ -45,9 +55,12 @@
 </div>
 
 {#if !loadingPosts}
-	{#if posts && posts.length > 0}
-		{#each posts as item}
-			<Post post={item.post} hasBottomBorder={false} isClickable={false} />
+	{#if thread}
+		<Post post={thread.post} hasBottomBorder={true} isClickable={false} />
+		{#each thread.replies as item}
+			{#if AppBskyFeedDefs.isThreadViewPost(item)}
+				<Post post={item.post} hasBottomBorder={true} isClickable={true} />
+			{/if}
 		{/each}
 	{:else}
 		<FullPageNote
