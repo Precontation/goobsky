@@ -5,3 +5,5 @@ export const load: PageLoad = () => {
 		title: 'Viewing Post'
 	};
 };
+
+export const prerender = false;
