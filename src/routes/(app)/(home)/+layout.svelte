@@ -26,6 +26,6 @@
 />
 
 <!-- Containerize all the z-index shenanigans going on in children -->
-<div class="z-0">
+<div class="z-0 h-full">
 	{@render children()}
 </div>

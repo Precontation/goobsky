@@ -59,7 +59,7 @@
 {:else if AppBskyEmbedExternal.isView(embed.embed)}
 	<!-- Link embed -->
 	<Button.Root
-		class="embed-content flex cursor-pointer flex-col border border-border hover:border-border-hover"
+		class="embed-content flex cursor-pointer flex-col rounded-theme border border-border hover:border-border-hover"
 		href={embed.embed.external.uri}
 		target="_blank"
 		rel="noopener noreferrer"

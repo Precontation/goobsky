@@ -1,16 +1,9 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
 	import { bskyAgent } from '$lib/api/bskyApi';
-	import {
-		AppBskyEmbedExternal,
-		AppBskyEmbedGallery,
-		AppBskyEmbedImages,
-		AppBskyEmbedRecord,
-		AppBskyEmbedRecordWithMedia,
-		AppBskyEmbedVideo,
-		AppBskyRichtextFacet
-	} from '@atproto/api';
-	import { Bookmark, Bot, Eye, Heart, MessageSquare, Repeat, Reply } from '@lucide/svelte';
+	import { Bookmark, Bot, Heart, MessageSquare, Repeat, Reply } from '@lucide/svelte';
+
+	import type { AppBskyFeedDefs, AppBskyRichtextFacet } from '@atproto/api';
 	import { Button } from 'bits-ui';
 	import ToolTip from '../ui/ToolTip.svelte';
 	import PostContent from './PostContent.svelte';
@@ -18,62 +11,23 @@
 	import PostInteraction from './PostInteraction.svelte';
 
 	let {
-		uri,
-		cid,
-		displayName,
-		isBot,
-		avatar,
-		handle,
-		isReply,
-		content,
-		facets,
-		embed,
-		replies,
-		reposts,
-		likes,
-		likedUri,
-		views, // Not available in Bluesky, but they may in others, so keep
-		bookmarks,
-		bookmarked,
+		post,
 		hasBottomBorder,
 		isClickable
 	}: {
-		uri: string;
-		cid: string;
-		displayName: string;
-		isBot: boolean;
-		avatar?: string;
-		handle: string;
-		isReply?: boolean; // TODO: it doesn't provide the person replied to name, so you'd have to hydrate it or also render that
-		content: string;
-		facets?: AppBskyRichtextFacet.Main[];
-		embed?:
-			| AppBskyEmbedImages.View
-			| AppBskyEmbedVideo.View
-			| AppBskyEmbedGallery.View
-			| AppBskyEmbedExternal.View
-			| AppBskyEmbedRecord.View
-			| AppBskyEmbedRecordWithMedia.View
-			| {
-					$type: string;
-			  };
-		replies?: number;
-		reposts?: number;
-		likes?: number;
-		likedUri?: string | null; // If likedUri is null that means the user is logged out or something and is unable to like. Undefined just means logged in but not liked.
-		views?: number;
-		bookmarks?: number;
-		bookmarked?: boolean | null; // If bookmarkedUri is null that means the user is logged out or something and is unable to bookmark. Undefined just means logged in but not bookmarked.
+		post: AppBskyFeedDefs.PostView;
 		hasBottomBorder: boolean; // If this is false it's probably a quote post where you don't want a bottom border.
 		isClickable: boolean; // If this is true then it's most likely in the feed. If it's false then it probably is already on the post page
 	} = $props();
 
 	// svelte-ignore state_referenced_locally
-	let liked: boolean | null = $state(likedUri === null ? null : likedUri !== undefined);
+	let liked: boolean | null = $state(
+		post.viewer?.like === null ? null : post.viewer?.like !== undefined
+	);
 	// svelte-ignore state_referenced_locally
-	let localLikes: number | undefined = $state(likes);
+	let localLikes: number | undefined = $state(post.likeCount);
 	// svelte-ignore state_referenced_locally
-	let localLikedUri: string | null | undefined = $state(likedUri);
+	let localLikedUri: string | null | undefined = $state(post.viewer?.like);
 
 	let isLiking = $state(false);
 	const togglePostLiked = async () => {
@@ -101,7 +55,7 @@
 				// Change the number displayed
 				if (localLikes !== undefined) localLikes += 1;
 
-				const { uri: newLikeUri, cid: newLikeCid } = await bskyAgent.like(uri, cid);
+				const { uri: newLikeUri, cid: newLikeCid } = await bskyAgent.like(post.uri, post.cid);
 				localLikedUri = newLikeUri;
 			}
 		} catch {
@@ -124,8 +78,8 @@
 		class="absolute top-0 right-0 bottom-0 left-0 z-0"
 		href={isClickable
 			? resolve('/(app)/post/[did]/[rkey]', {
-					did: uri.split('/').at(2) ?? 'undefined',
-					rkey: uri.split('/').at(-1) ?? 'undefined'
+					did: post.uri.split('/').at(2) ?? 'undefined',
+					rkey: post.uri.split('/').at(-1) ?? 'undefined'
 				})
 			: ''}
 	></Button.Root>
@@ -133,15 +87,15 @@
 	<div class="flex gap-2">
 		<img
 			loading="lazy"
-			src={avatar}
+			src={post.author.avatar}
 			alt=""
 			class="avatar z-10 h-10 w-10 shrink-0 self-start border border-border object-cover"
 		/>
 		<div class="flex flex-col gap-1">
 			<div class="z-10 flex w-fit items-center gap-1">
-				<span class="font-bold">{displayName}</span>
-				<span class="text-xs">@{handle}</span>
-				{#if isBot}
+				<span class="font-bold">{post.author.displayName ?? 'Unknown user'}</span>
+				<span class="text-xs">@{post.author.handle ?? 'Unknown handle'}</span>
+				{#if post.author.labels?.some((label) => label.val === 'bot') ?? false}
 					<ToolTip
 						trigger={Bot}
 						class="h-4 w-4"
@@ -150,31 +104,34 @@
 				{/if}
 			</div>
 
-			{#if isReply}
+			{#if post.record.reply}
 				<div class="z-10 flex w-fit gap-1">
 					<Reply class="h-4 w-4 rotate-180" />
 					<span class="text-xs">Is a reply</span>
 				</div>
 			{/if}
 
-			<PostContent {content} {facets} />
+			<PostContent
+				content={post.record.text as string}
+				facets={post.record.facets as AppBskyRichtextFacet.Main[]}
+			/>
 
 			<div class="z-10">
-				{#if embed}
-					<PostEmbed {embed} />
+				{#if post.embed}
+					<PostEmbed embed={post.embed} />
 				{/if}
 			</div>
 		</div>
 	</div>
 	<div class="z-1 flex w-fit gap-5">
-		<PostInteraction icon={MessageSquare} count={replies} />
-		<PostInteraction icon={Repeat} count={reposts} />
+		<PostInteraction icon={MessageSquare} count={post.replyCount} />
+		<PostInteraction icon={Repeat} count={post.repostCount} />
 		<PostInteraction
 			icon={Heart}
-			count={likes}
-			targetUri={uri}
-			targetCid={cid}
-			interactionUri={likedUri}
+			count={post.likeCount}
+			targetUri={post.uri}
+			targetCid={post.cid}
+			interactionUri={post.viewer?.like}
 			create={async (createUri, createCid) => {
 				const { uri: newUri, cid: newCid } = await bskyAgent.like(createUri, createCid);
 				return newUri;
@@ -185,13 +142,16 @@
 			toggleable={true}
 			fillWhenToggled={true}
 		/>
-		<PostInteraction icon={Eye} count={views} />
 		<PostInteraction
 			icon={Bookmark}
-			count={bookmarks}
-			targetUri={uri}
-			targetCid={cid}
-			interactionUri={bookmarked === true ? uri : bookmarked === false ? undefined : null}
+			count={post.bookmarkCount}
+			targetUri={post.uri}
+			targetCid={post.cid}
+			interactionUri={post.viewer?.bookmarked === true
+				? post.uri
+				: post.viewer?.bookmarked === false
+					? undefined
+					: null}
 			create={async (createUri, createCid) => {
 				await bskyAgent.app.bsky.bookmark.createBookmark({
 					uri: createUri,

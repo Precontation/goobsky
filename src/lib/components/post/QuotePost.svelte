@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { bskyAgent } from '$lib/api/bskyApi';
 	import { getPosts, type PostItem } from '$lib/helpers/atProto.svelte';
-	import { AppBskyRichtextFacet } from '@atproto/api';
 	import { ChevronsUpDown } from '@lucide/svelte';
 	import { Button, Collapsible } from 'bits-ui';
 	import LoadingSpinner from '../ui/LoadingSpinner.svelte';
@@ -53,26 +52,7 @@
 		{#if !loadingPosts}
 			<Button.Root class="w-full " href={embed.uri} target="_blank" rel="noopener noreferrer">
 				{#each posts as item}
-					<Post
-						uri={item.post.uri}
-						cid={item.post.cid}
-						displayName={item.post.author.displayName ?? 'Unknown user'}
-						isBot={item.post.author.labels?.some((label) => label.val === 'bot') ?? false}
-						avatar={item.post.author.avatar}
-						handle={item.post.author.handle ?? 'Unknown handle'}
-						isReply={item.post.record.reply as any}
-						content={(item.post.record.text as string) ?? 'asdf'}
-						facets={item.post.record.facets as AppBskyRichtextFacet.Main[]}
-						embed={item.post.embed}
-						replies={item.post.replyCount}
-						reposts={item.post.repostCount}
-						likes={item.post.likeCount}
-						likedUri={item.post.viewer?.like}
-						bookmarks={item.post.bookmarkCount}
-						bookmarked={item.post.viewer?.bookmarked}
-						hasBottomBorder={false}
-						isClickable={true}
-					/>
+					<Post post={item.post} hasBottomBorder={false} isClickable={true} />
 				{/each}
 			</Button.Root>
 		{:else}

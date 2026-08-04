@@ -5,7 +5,6 @@
 	import FullPageSpinner from '$lib/components/ui/FullPageSpinner.svelte';
 	import FullPageNote from '$lib/components/ui/notes/FullPageNote.svelte';
 	import { getPosts, type PostItem } from '$lib/helpers/atProto.svelte';
-	import { AppBskyRichtextFacet } from '@atproto/api';
 	import { ChevronLeft } from '@lucide/svelte';
 	import { Button } from 'bits-ui';
 	import { onMount } from 'svelte';
@@ -48,26 +47,7 @@
 {#if !loadingPosts}
 	{#if posts && posts.length > 0}
 		{#each posts as item}
-			<Post
-				uri={item.post.uri}
-				cid={item.post.cid}
-				displayName={item.post.author.displayName ?? 'Unknown user'}
-				isBot={item.post.author.labels?.some((label) => label.val === 'bot') ?? false}
-				avatar={item.post.author.avatar}
-				handle={item.post.author.handle ?? 'Unknown handle'}
-				isReply={item.post.record.reply as any}
-				content={(item.post.record.text as string) ?? 'asdf'}
-				facets={item.post.record.facets as AppBskyRichtextFacet.Main[]}
-				embed={item.post.embed}
-				replies={item.post.replyCount}
-				reposts={item.post.repostCount}
-				likes={item.post.likeCount}
-				likedUri={item.post.viewer?.like}
-				bookmarks={item.post.bookmarkCount}
-				bookmarked={item.post.viewer?.bookmarked}
-				hasBottomBorder={false}
-				isClickable={false}
-			/>
+			<Post post={item.post} hasBottomBorder={false} isClickable={false} />
 		{/each}
 	{:else}
 		<FullPageNote
