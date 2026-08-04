@@ -66,7 +66,7 @@
 {#if loading}
 	<FullPageSpinner />
 {:else}
-	<div class="mb-4 flex flex-col gap-2 border-b border-border pb-4 pl-8">
+	<div class="mb-4 flex w-full flex-col gap-2 border-b border-border px-8 pb-4">
 		<h2>Theme</h2>
 		<SettingsRadioGroup
 			items={[
@@ -80,19 +80,19 @@
 	</div>
 
 	<!-- TODO: color scheme picker -->
-	<!-- <div class="mb-4 flex flex-col gap-2 border-b border-border pb-4 pl-8">
+	<!-- <div class="mb-4 flex flex-col gap-2 border-b border-border pb-4 px-8">
 		<h2>Color scheme</h2>
 		<input type="color" />
 	</div> -->
 
-	<div class="mb-4 flex flex-col gap-2 border-b border-border pb-4 pl-8">
+	<div class="mb-4 flex w-full max-w-full flex-col gap-2 border-b border-border px-8 pb-4">
 		<h2>Roundness</h2>
 		<SettingsRadioGroup
 			items={[
 				{ name: 'Square', value: 'square' },
-				{ name: 'Round', value: 'round' },
-				{ name: 'Rounder', value: 'rounder' },
-				{ name: 'Roundest', value: 'roundest' },
+				{ name: 'Small', value: 'round' },
+				{ name: 'Medium', value: 'rounder' },
+				{ name: 'Large', value: 'roundest' },
 				{ name: "...don't", value: 'dont' }
 			]}
 			bind:value={roundness}
@@ -100,7 +100,7 @@
 		/>
 	</div>
 
-	<div class="mb-4 flex flex-col gap-2 border-b border-border pb-4 pl-8">
+	<div class="mb-4 flex w-full flex-col gap-2 border-b border-border px-8 pb-4">
 		<div>
 			<h2>Post Padding</h2>
 			<span>The spacing around the actual post</span>
@@ -116,7 +116,7 @@
 		/>
 	</div>
 
-	<div class="mb-4 flex flex-col gap-2 pl-8">
+	<div class="mb-4 flex w-full flex-col gap-2 px-8">
 		<h2>Font</h2>
 		<SettingsRadioGroup
 			items={[
@@ -128,7 +128,7 @@
 		/>
 	</div>
 
-	<div class="mb-4 flex flex-col gap-2 pl-8">
+	<div class="mb-4 flex w-full flex-col gap-2 px-8">
 		<h2>Font Size</h2>
 		<SettingsRadioGroup
 			items={[

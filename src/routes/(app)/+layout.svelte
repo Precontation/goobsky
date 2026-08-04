@@ -50,6 +50,9 @@
 	}
 
 	main {
+		/* Set the z-index to contain z-index shenanigans in main */
+		z-index: 0;
+
 		min-height: 0;
 		border-inline: 1px solid var(--color-border);
 		display: flex;

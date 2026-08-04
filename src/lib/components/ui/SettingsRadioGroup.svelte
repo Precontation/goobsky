@@ -18,13 +18,14 @@
 	bind:value
 	orientation="horizontal"
 	{name}
-	class="flex h-fit w-fit rounded-theme border border-border bg-surface p-1"
+	class="flex h-fit w-full rounded-theme border border-border bg-surface p-1"
 >
 	{#each items as item (item.value)}
 		<RadioGroup.Item
 			value={item.value}
-			class="rounded-theme px-4 py-2 text-sm
-			hover:bg-hover
+			class="min-w-0 flex-1 shrink truncate
+			rounded-theme
+			p-2 text-sm hover:bg-hover
 			data-[state=checked]:bg-surface-hover
 			data-[state=checked]:shadow-sm {item.class}"
 		>
