@@ -1,18 +1,26 @@
 <script lang="ts">
-	let { title, src, thumbnail, aspectWidth, aspectHeight, class: className } = $props();
-	import Hls from 'hls.js';
+	import type HlsInstance from 'hls.js';
 	import { onMount } from 'svelte';
 
+	let { title, src, thumbnail, aspectWidth, aspectHeight, class: className } = $props();
 	let videoElement: HTMLVideoElement;
 
 	onMount(() => {
-		if (Hls.isSupported()) {
-			const hls = new Hls();
-			hls.loadSource(src);
-			hls.attachMedia(videoElement);
-		} else if (videoElement.canPlayType('application/vnd.apple.mpegurl')) {
-			videoElement.src = src;
-		}
+		let hls: HlsInstance | undefined;
+
+		void (async () => {
+			const { default: Hls } = await import('hls.js');
+
+			if (Hls.isSupported()) {
+				hls = new Hls();
+				hls.loadSource(src);
+				hls.attachMedia(videoElement);
+			} else if (videoElement.canPlayType('application/vnd.apple.mpegurl')) {
+				videoElement.src = src;
+			}
+		})();
+
+		return () => hls?.destroy();
 	});
 </script>
 
