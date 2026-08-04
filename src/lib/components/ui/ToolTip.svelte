@@ -23,7 +23,7 @@
 
 <style>
 	.tooltip {
-		border-radius: var(--roundness);
+		border-radius: var(--ui-roundness);
 		border: 1px solid var(--color-border);
 
 		background-color: var(--color-surface);

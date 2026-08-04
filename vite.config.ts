@@ -22,6 +22,11 @@ export default defineConfig({
 			})
 		})
 	],
+	server: {
+		watch: {
+			ignored: ['**/build/**']
+		}
+	},
 	test: {
 		expect: { requireAssertions: true },
 		projects: [

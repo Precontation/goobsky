@@ -29,7 +29,6 @@
 
 		font-size: large;
 
-		border-radius: var(--roundness);
 		background-color: var(--color-background);
 
 		justify-content: center;

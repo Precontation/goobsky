@@ -34,7 +34,7 @@
 
 		border: 1px solid var(--color-border);
 
-		border-radius: var(--roundness);
+		border-radius: var(--ui-roundness);
 	}
 
 	/* Remove the box outline focus thing on input, as we have a custom one */

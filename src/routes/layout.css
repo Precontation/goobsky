@@ -1,5 +1,14 @@
 @import 'tailwindcss';
 
+/* Import the Satoshi font */
+@font-face {
+	font-family: 'Satoshi';
+	src: url('/fonts/Satoshi/Satoshi-Variable.woff2') format('woff2');
+	font-weight: 300 900;
+	font-stretch: 75% 125%;
+	font-display: swap;
+}
+
 @theme {
 	/* Palette */
 	--color-sugar-cane-50: #f6fbf2;
@@ -29,21 +38,21 @@
 
 	/* Not color related stuff :) */
 	--spacing-post: var(--post-padding);
-	--roundness: var(--roundness);
+	--radius-theme: var(--ui-roundness);
 }
 
+/* ----- Basic defaults ----- */
 :root {
-	/* Basic info */
 	--post-padding: 1rem;
-	/* TODO: make roundness customizable: 0px, 8px, 16px, and "please no" 100%; */
-	--roundness: 0px;
+	--ui-roundness: 0px;
+	font-family: 'Satoshi', sans-serif;
 
 	/* Light theme */
 	--theme-background: #ffffff;
-	--theme-info-background: var(--color-sugar-cane-200);
+	--theme-info-background: var(--color-sugar-cane-300);
 	--theme-surface: #f5f5f5;
 	--theme-surface-hover: #e8e8e8;
-	--theme-primary: var(--color-sugar-cane-600);
+	--theme-primary: var(--color-sugar-cane-700);
 	--theme-primary-hover: var(--color-sugar-cane-700);
 	--theme-text: #111111;
 	--theme-text-muted: #666666;
@@ -55,6 +64,10 @@
 	color-scheme: light;
 }
 
+/* ----- CUSTOM DATA ----- */
+/* NOTE: if default, nothing is included */
+
+/* If chosen dark mode, customize */
 :root[data-theme='dark'] {
 	--theme-background: #0d0d0d;
 	--theme-info-background: var(--color-sugar-cane-800);
@@ -71,6 +84,46 @@
 	--theme-danger: #d46868;
 
 	color-scheme: dark;
+}
+
+/* Custom Roundness */
+:root[data-roundness='round'] {
+	--ui-roundness: 8px;
+}
+
+:root[data-roundness='rounder'] {
+	--ui-roundness: 16px;
+}
+
+:root[data-roundness='roundest'] {
+	--ui-roundness: 32px;
+}
+
+:root[data-roundness='dont'] {
+	--ui-roundness: 100%;
+}
+
+/* Custom Post Padding */
+:root[data-post-padding='small'] {
+	--post-padding: 0.5rem;
+}
+
+:root[data-post-padding='large'] {
+	--post-padding: 2rem;
+}
+
+/* Custom Font */
+:root[data-font='system'] {
+	font-family: system-ui, sans-serif;
+}
+
+/* Custom Font Size */
+:root[data-font-size='small'] {
+	font-size: 87.5%; /* 14px when browser default is 16px */
+}
+
+:root[data-font-size='large'] {
+	font-size: 112.5%; /* 18px */
 }
 
 @layer base {

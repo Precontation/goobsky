@@ -86,7 +86,7 @@
 
 <style>
 	.embed-content {
-		border-radius: var(--roundness);
+		border-radius: var(--ui-roundness);
 		text-overflow: ellipsis;
 		max-width: 100%;
 		overflow: hidden;

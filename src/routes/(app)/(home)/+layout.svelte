@@ -25,4 +25,7 @@
 	]}
 />
 
-{@render children()}
+<!-- Containerize all the z-index shenanigans going on in children -->
+<div class="z-0">
+	{@render children()}
+</div>

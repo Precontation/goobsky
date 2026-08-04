@@ -34,7 +34,7 @@
 
 		font-size: large;
 
-		border-radius: var(--roundness);
+		border-radius: var(--ui-roundness);
 	}
 
 	.nav-button:hover {

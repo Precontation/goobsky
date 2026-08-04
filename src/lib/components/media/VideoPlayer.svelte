@@ -32,7 +32,7 @@
 
 <style>
 	.media-player {
-		border-radius: var(--roundness);
+		border-radius: var(--ui-roundness);
 
 		max-height: 45dvh;
 		width: auto;

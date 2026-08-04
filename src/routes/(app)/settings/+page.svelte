@@ -33,11 +33,11 @@
 		</Button.Root>
 		<Button.Root
 			class="flex w-full cursor-pointer items-center border-b border-border p-2 pl-8 hover:bg-hover"
-			href={resolve('/(app)/settings/(settings)/visual')}
+			href={resolve('/(app)/settings/(settings)/appearance')}
 		>
 			<div>
-				<h2 class="text-start">Visual</h2>
-				<h3 class="text-start">Spice up your {APP_NAME} experience</h3>
+				<h2 class="text-start">Appearance</h2>
+				<h3 class="text-start">Spice up your {APP_NAME} visuals</h3>
 			</div>
 
 			<ChevronRight class="ml-auto cursor-pointer" />
