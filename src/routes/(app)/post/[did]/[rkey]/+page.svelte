@@ -2,6 +2,7 @@
 	import { page } from '$app/state';
 	import { bskyAgent } from '$lib/api/bskyApi';
 	import Post from '$lib/components/post/Post.svelte';
+	import ThreadReply from '$lib/components/post/ThreadReply.svelte';
 	import FullPageSpinner from '$lib/components/ui/FullPageSpinner.svelte';
 	import FullPageNote from '$lib/components/ui/notes/FullPageNote.svelte';
 	import { getPostThread, type ThreadItem } from '$lib/helpers/atProto.svelte';
@@ -12,7 +13,25 @@
 	let loadingPosts: boolean = $state(true);
 	let thread = $state<ThreadItem | null>();
 
+	let ancestors = $derived.by(() => {
+		// When the thread item changes, load its ancestors
+		let currentAncestor = thread?.parent;
+		let newAncestors = [];
+
+		while (currentAncestor && AppBskyFeedDefs.isThreadViewPost(currentAncestor)) {
+			newAncestors.push(currentAncestor);
+			currentAncestor = currentAncestor.parent;
+		}
+
+		// Apparently pushing forward then reversing is faster to compute, but it doesn't really matter for my case
+		// But there's no reason not to since I know of it!
+		newAncestors.reverse();
+		return newAncestors;
+	});
+
 	$effect(() => {
+		// Load posts when params change
+
 		let cancelled = false;
 
 		if (!page.params.did || !page.params.rkey) {
@@ -42,6 +61,12 @@
 			cancelled = true;
 		};
 	});
+
+	let mainPost = $state();
+	$effect(() => {
+		if (!mainPost || !(mainPost instanceof HTMLElement)) return;
+		mainPost.scrollIntoView();
+	});
 </script>
 
 <div class="flex gap-2 border-b border-border p-4">
@@ -55,19 +80,42 @@
 </div>
 
 {#if !loadingPosts}
-	{#if thread}
-		<Post post={thread.post} hasBottomBorder={true} isClickable={false} />
-		{#each thread.replies as item}
+	<div class="pb-50">
+		{#each ancestors as item}
 			{#if AppBskyFeedDefs.isThreadViewPost(item)}
-				<Post post={item.post} hasBottomBorder={true} isClickable={true} />
+				<Post
+					post={item.post}
+					hasBottomBorder={false}
+					replyText={undefined}
+					isClickable={true}
+					threadType={ancestors.indexOf(item) === 0 ? 'reply' : 'ancestor'}
+				/>
 			{/if}
 		{/each}
-	{:else}
-		<FullPageNote
-			title={'Post not found'}
-			content={"The post you were looking for was not found. It could be that the post is private, or that it doesn't exist."}
-		/>
-	{/if}
+
+		{#if thread}
+			<div bind:this={mainPost}>
+				<Post
+					post={thread.post}
+					hasBottomBorder={true}
+					replyText={undefined}
+					isClickable={false}
+					isMainInThread={true}
+					threadType="main"
+				/>
+			</div>
+			{#each thread.replies as item}
+				{#if AppBskyFeedDefs.isThreadViewPost(item)}
+					<ThreadReply {item} depth={1} />
+				{/if}
+			{/each}
+		{:else}
+			<FullPageNote
+				title={'Post not found'}
+				content={"The post you were looking for was not found. It could be that the post is private, or that it doesn't exist."}
+			/>
+		{/if}
+	</div>
 {:else}
 	<FullPageSpinner />
 {/if}

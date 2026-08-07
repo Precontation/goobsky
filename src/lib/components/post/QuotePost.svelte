@@ -1,8 +1,9 @@
 <script lang="ts">
 	import { bskyAgent } from '$lib/api/bskyApi';
-	import { getPosts, type PostItem } from '$lib/helpers/atProto.svelte';
+	import { getPosts } from '$lib/helpers/atProto.svelte';
 	import { ChevronsUpDown } from '@lucide/svelte';
 	import { Button, Collapsible } from 'bits-ui';
+	import type { PostItem } from '../feed/Feed.svelte';
 	import LoadingSpinner from '../ui/LoadingSpinner.svelte';
 	import Post from './Post.svelte';
 

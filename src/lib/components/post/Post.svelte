@@ -1,78 +1,35 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
-	import { bskyAgent } from '$lib/api/bskyApi';
-	import { Bookmark, Bot, Heart, MessageSquare, Repeat, Reply } from '@lucide/svelte';
+	import { Bot, Reply } from '@lucide/svelte';
 
 	import type { AppBskyFeedDefs, AppBskyRichtextFacet } from '@atproto/api';
 	import { Button } from 'bits-ui';
 	import ToolTip from '../ui/ToolTip.svelte';
 	import PostContent from './PostContent.svelte';
 	import PostEmbed from './PostEmbed.svelte';
-	import PostInteraction from './PostInteraction.svelte';
+	import PostInteractions from './PostInteractions.svelte';
 
 	let {
 		post,
 		hasBottomBorder,
-		isClickable
+		isClickable,
+		replyText,
+		threadType = 'none',
+		isMainInThread = false
 	}: {
 		post: AppBskyFeedDefs.PostView;
 		hasBottomBorder: boolean; // If this is false it's probably a quote post where you don't want a bottom border.
 		isClickable: boolean; // If this is true then it's most likely in the feed. If it's false then it probably is already on the post page
+		replyText: string | undefined; // Renders the reply text, or it's not a reply if undefined
+		threadType: 'none' | 'ancestor' | 'main' | 'reply' | 'nestedReply'; // None is normal, ancestor is part of the above chain before a reply, main is the selected post in a thread, reply is a reply to that post, and nestedReply is a... nested reply!
+		isMainInThread?: boolean; // If it's the clicked post in a thread, change some visuals
 	} = $props();
-
-	// svelte-ignore state_referenced_locally
-	let liked: boolean | null = $state(
-		post.viewer?.like === null ? null : post.viewer?.like !== undefined
-	);
-	// svelte-ignore state_referenced_locally
-	let localLikes: number | undefined = $state(post.likeCount);
-	// svelte-ignore state_referenced_locally
-	let localLikedUri: string | null | undefined = $state(post.viewer?.like);
-
-	let isLiking = $state(false);
-	const togglePostLiked = async () => {
-		if (localLikedUri === null) return;
-		if (isLiking) return;
-
-		const prevLiked = liked;
-		const prevLikedUri = localLikedUri;
-		const prevLocalLikes = localLikes;
-
-		isLiking = true;
-		liked = !liked;
-
-		try {
-			if (!liked) {
-				// Since we flipped liked we have to kinda think flipped
-				if (localLikedUri) {
-					// Change the number displayed
-					if (localLikes !== undefined) localLikes -= 1;
-
-					await bskyAgent.deleteLike(localLikedUri);
-					localLikedUri = undefined;
-				}
-			} else {
-				// Change the number displayed
-				if (localLikes !== undefined) localLikes += 1;
-
-				const { uri: newLikeUri, cid: newLikeCid } = await bskyAgent.like(post.uri, post.cid);
-				localLikedUri = newLikeUri;
-			}
-		} catch {
-			// Probably hit a rate limit
-			liked = prevLiked;
-			localLikedUri = prevLikedUri;
-			localLikes = prevLocalLikes;
-		} finally {
-			isLiking = false;
-		}
-	};
 </script>
 
 <article
-	class="{hasBottomBorder ? 'border-b border-border' : ''} {isClickable
-		? 'cursor-pointer hover:bg-hover'
-		: ''}"
+	class="border-border {isMainInThread ? 'border-t' : ''} {hasBottomBorder
+		? 'border-b'
+		: ''} {isClickable ? 'cursor-pointer hover:bg-hover' : ''}"
 >
 	{#if isClickable}
 		<Button.Root
@@ -87,16 +44,28 @@
 	{/if}
 
 	<div class="flex gap-2">
-		<img
-			loading="lazy"
-			src={post.author.avatar}
-			alt=""
-			class="avatar z-10 h-10 w-10 shrink-0 self-start border border-border object-cover"
-		/>
-		<div class="flex flex-col gap-1">
+		<div
+			class="relative shrink-0 self-stretch {threadType === 'ancestor'
+				? 'thread-middle'
+				: threadType === 'reply'
+					? 'thread-start'
+					: threadType === 'nestedReply'
+						? 'thread-end'
+						: ''}"
+		>
+			<img
+				loading="lazy"
+				src={post.author.avatar}
+				alt=""
+				class="avatar z-10 h-10 w-10 shrink-0 self-start border border-border object-cover"
+			/>
+		</div>
+		<div class="flex flex-col gap-1 {isMainInThread ? 'pt-post' : 'py-post'}">
 			<div class="z-10 flex w-fit items-center gap-1">
 				<span class="font-bold">{post.author.displayName ?? 'Unknown user'}</span>
-				<span class="text-xs">@{post.author.handle ?? 'Unknown handle'}</span>
+				{#if !isMainInThread}
+					<span class="text-xs text-text-muted">@{post.author.handle ?? 'Unknown handle'}</span>
+				{/if}
 				{#if post.author.labels?.some((label) => label.val === 'bot') ?? false}
 					<ToolTip
 						trigger={Bot}
@@ -106,10 +75,14 @@
 				{/if}
 			</div>
 
-			{#if post.record.reply}
+			{#if isMainInThread}
+				<span class="text-sm text-text-muted">@{post.author.handle ?? 'Unknown handle'}</span>
+			{/if}
+
+			{#if replyText !== undefined}
 				<div class="z-10 flex w-fit gap-1">
 					<Reply class="h-4 w-4 rotate-180" />
-					<span class="text-xs">Is a reply</span>
+					<span class="text-xs">{replyText || 'Is a reply'}</span>
 				</div>
 			{/if}
 
@@ -123,60 +96,26 @@
 					<PostEmbed embed={post.embed} />
 				{/if}
 			</div>
+
+			{#if !isMainInThread}
+				<div class="pt-3">
+					<PostInteractions {post} />
+				</div>
+			{/if}
 		</div>
 	</div>
-	<div class="z-1 flex w-fit gap-5">
-		<PostInteraction icon={MessageSquare} count={post.replyCount} />
-		<PostInteraction icon={Repeat} count={post.repostCount} />
-		<PostInteraction
-			icon={Heart}
-			count={post.likeCount}
-			targetUri={post.uri}
-			targetCid={post.cid}
-			interactionUri={post.viewer?.like}
-			create={async (createUri, createCid) => {
-				const { uri: newUri, cid: newCid } = await bskyAgent.like(createUri, createCid);
-				return newUri;
-			}}
-			remove={async (removeUri) => {
-				await bskyAgent.deleteLike(removeUri);
-			}}
-			toggleable={true}
-			fillWhenToggled={true}
-		/>
-		<PostInteraction
-			icon={Bookmark}
-			count={post.bookmarkCount}
-			targetUri={post.uri}
-			targetCid={post.cid}
-			interactionUri={post.viewer?.bookmarked === true
-				? post.uri
-				: post.viewer?.bookmarked === false
-					? undefined
-					: null}
-			create={async (createUri, createCid) => {
-				await bskyAgent.app.bsky.bookmark.createBookmark({
-					uri: createUri,
-					cid: createCid
-				});
-
-				// Return the create uri because then when unsaving it it can
-				return createUri;
-			}}
-			remove={async (removeUri) => {
-				await bskyAgent.app.bsky.bookmark.deleteBookmark({
-					uri: removeUri
-				});
-			}}
-			toggleable={true}
-			fillWhenToggled={true}
-		/>
-	</div>
+	{#if isMainInThread}
+		<div class="border-t border-border py-post">
+			<PostInteractions {post} />
+		</div>
+	{/if}
 </article>
 
 <style>
 	article {
-		padding: var(--post-padding);
+		/* Don't do vertical padding here because threads wouldn't have the perfect line thingy otherwise */
+		padding-inline: var(--post-padding);
+
 		position: relative;
 
 		display: flex;
@@ -186,5 +125,34 @@
 
 	.avatar {
 		border-radius: 100%;
+		margin-top: var(--post-padding);
+	}
+
+	.thread-start::after,
+	.thread-middle::after,
+	.thread-middle::before,
+	.thread-end::before {
+		content: '';
+		position: absolute;
+		left: 50%;
+		transform: translateX(-50%);
+		width: 1px;
+		border: 1px solid var(--color-border);
+	}
+
+	.thread-start::after,
+	.thread-middle::after {
+		/* Set top to post padding + 40px (avatar size) + 5px (so it isn't directly connected) */
+		top: calc(var(--post-padding) + 40px + 5px);
+
+		bottom: 0;
+	}
+
+	.thread-middle::before,
+	.thread-end::before {
+		top: 0;
+
+		/* Set height to post padding - 5px (so it isn't directly connected) */
+		height: calc(var(--post-padding) - 5px);
 	}
 </style>

@@ -318,7 +318,13 @@
 		{#if loadedFeed.items.length > 0}
 			{#each loadedFeed.items as item (item.post.uri)}
 				{#if AppBskyFeedPost.isRecord(item.post.record)}
-					<Post post={item.post} hasBottomBorder={true} isClickable={true} />
+					<Post
+						post={item.post}
+						hasBottomBorder={true}
+						isClickable={true}
+						threadType={'none'}
+						replyText={item.post.record.reply ? 'Is a reply' : undefined}
+					/>
 				{/if}
 			{/each}
 		{:else}
