@@ -35,10 +35,10 @@
 	hasBottomBorder={true}
 	isClickable={true}
 	{replyText}
-	threadLine={depth <= maxDepth
+	threadLine={depth <= maxDepth + 1
 		? replies.length > 0
-			? 'both'
-			: 'above'
+			? 'below'
+			: 'none'
 		: replies.length > 0
 			? 'both'
 			: 'above'}
