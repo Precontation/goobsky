@@ -53,7 +53,13 @@
 		{#if !loadingPosts}
 			<Button.Root class="w-full " href={embed.uri} target="_blank" rel="noopener noreferrer">
 				{#each posts as item}
-					<Post post={item.post} hasBottomBorder={false} isClickable={true} />
+					<Post
+						post={item.post}
+						hasBottomBorder={false}
+						isClickable={true}
+						replyText={undefined}
+						threadLine="none"
+					/>
 				{/each}
 			</Button.Root>
 		{:else}

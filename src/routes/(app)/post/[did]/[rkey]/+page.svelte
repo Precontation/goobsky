@@ -88,7 +88,7 @@
 					hasBottomBorder={false}
 					replyText={undefined}
 					isClickable={true}
-					threadType={ancestors.indexOf(item) === 0 ? 'reply' : 'ancestor'}
+					threadLine={ancestors.indexOf(item) === 0 ? 'below' : 'both'}
 				/>
 			{/if}
 		{/each}
@@ -101,7 +101,7 @@
 					replyText={undefined}
 					isClickable={false}
 					isMainInThread={true}
-					threadType="main"
+					threadLine="above"
 				/>
 			</div>
 			{#each thread.replies as item}

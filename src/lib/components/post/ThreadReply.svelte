@@ -27,7 +27,7 @@
 	};
 
 	let replies: AppBskyFeedDefs.ThreadViewPost[] = $derived(getValidReplies(item));
-	let depthPx = $derived(Math.min(depth, maxDepth) * 50);
+	let depthPx = $derived(Math.min(depth, maxDepth) * 30);
 </script>
 
 <Post
@@ -35,19 +35,25 @@
 	hasBottomBorder={true}
 	isClickable={true}
 	{replyText}
-	threadType={depth >= maxDepth ? 'nestedReply' : replies.length > 0 ? 'reply' : 'none'}
+	threadLine={depth <= maxDepth
+		? replies.length > 0
+			? 'both'
+			: 'above'
+		: replies.length > 0
+			? 'both'
+			: 'above'}
 />
 
 {#if replies.length > 0}
-	<div 
-    //style:padding-left="{depthPx}px"
-    >
-		{#each replies as reply}
-			<ThreadReply
-				item={reply}
-				depth={depth + 1}
-				replyText="Replying to {item.post.author.displayName}"
-			/>
-		{/each}
+	<div style:padding-left="{depthPx}px">
+		<div>
+			{#each replies as reply}
+				<ThreadReply
+					item={reply}
+					depth={depth + 1}
+					replyText="Replying to {item.post.author.displayName}"
+				/>
+			{/each}
+		</div>
 	</div>
 {/if}

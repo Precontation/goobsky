@@ -322,7 +322,7 @@
 						post={item.post}
 						hasBottomBorder={true}
 						isClickable={true}
-						threadType={'none'}
+						threadLine="none"
 						replyText={item.post.record.reply ? 'Is a reply' : undefined}
 					/>
 				{/if}

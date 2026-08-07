@@ -14,14 +14,14 @@
 		hasBottomBorder,
 		isClickable,
 		replyText,
-		threadType = 'none',
+		threadLine = 'none',
 		isMainInThread = false
 	}: {
 		post: AppBskyFeedDefs.PostView;
 		hasBottomBorder: boolean; // If this is false it's probably a quote post where you don't want a bottom border.
 		isClickable: boolean; // If this is true then it's most likely in the feed. If it's false then it probably is already on the post page
 		replyText: string | undefined; // Renders the reply text, or it's not a reply if undefined
-		threadType: 'none' | 'ancestor' | 'main' | 'reply' | 'nestedReply'; // None is normal, ancestor is part of the above chain before a reply, main is the selected post in a thread, reply is a reply to that post, and nestedReply is a... nested reply!
+		threadLine: 'none' | 'above' | 'below' | 'both'; // Self-explanatory; used for thread reply line things
 		isMainInThread?: boolean; // If it's the clicked post in a thread, change some visuals
 	} = $props();
 </script>
@@ -45,11 +45,11 @@
 
 	<div class="flex gap-2">
 		<div
-			class="relative shrink-0 self-stretch {threadType === 'ancestor'
+			class="relative shrink-0 self-stretch {threadLine === 'both'
 				? 'thread-middle'
-				: threadType === 'reply'
+				: threadLine === 'above'
 					? 'thread-start'
-					: threadType === 'nestedReply'
+					: threadLine === 'below'
 						? 'thread-end'
 						: ''}"
 		>
@@ -140,16 +140,16 @@
 		border: 1px solid var(--color-border);
 	}
 
-	.thread-start::after,
-	.thread-middle::after {
+	.thread-middle::before,
+	.thread-end::before {
 		/* Set top to post padding + 40px (avatar size) + 5px (so it isn't directly connected) */
 		top: calc(var(--post-padding) + 40px + 5px);
 
 		bottom: 0;
 	}
 
-	.thread-middle::before,
-	.thread-end::before {
+	.thread-start::after,
+	.thread-middle::after {
 		top: 0;
 
 		/* Set height to post padding - 5px (so it isn't directly connected) */
