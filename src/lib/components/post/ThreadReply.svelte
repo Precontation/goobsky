@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { getValidReplies } from '$lib/helpers/getValidReplies.svelte';
 	import { AppBskyFeedDefs } from '@atproto/api';
 	import Post from './Post.svelte';
 	import ThreadReply from './ThreadReply.svelte';
@@ -10,21 +11,6 @@
 		depth,
 		replyText
 	}: { item: AppBskyFeedDefs.ThreadViewPost; depth: number; replyText?: string } = $props();
-
-	const getValidReplies = (post: AppBskyFeedDefs.ThreadViewPost) => {
-		if (!post.replies) return [];
-
-		let newReplies: AppBskyFeedDefs.ThreadViewPost[] = [];
-
-		post.replies.forEach((reply) => {
-			if (AppBskyFeedDefs.isThreadViewPost(reply)) {
-				newReplies.push(reply);
-			}
-		});
-
-		newReplies.reverse();
-		return newReplies;
-	};
 
 	let replies: AppBskyFeedDefs.ThreadViewPost[] = $derived(getValidReplies(item));
 	let depthPx = $derived(Math.min(depth, maxDepth) * 30);

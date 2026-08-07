@@ -6,6 +6,7 @@
 	import FullPageSpinner from '$lib/components/ui/FullPageSpinner.svelte';
 	import FullPageNote from '$lib/components/ui/notes/FullPageNote.svelte';
 	import { getPostThread, type ThreadItem } from '$lib/helpers/atProto.svelte';
+	import { getValidReplies } from '$lib/helpers/getValidReplies.svelte';
 	import { AppBskyFeedDefs } from '@atproto/api';
 	import { ChevronLeft } from '@lucide/svelte';
 	import { Button } from 'bits-ui';
@@ -101,7 +102,7 @@
 					replyText={undefined}
 					isClickable={false}
 					isMainInThread={true}
-					threadLine="above"
+					threadLine={getValidReplies(thread).length > 0 ? 'below' : 'none'}
 				/>
 			</div>
 			{#each thread.replies as item}
