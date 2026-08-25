@@ -45,7 +45,7 @@
 
 	<div class="flex gap-2">
 		<div
-			class="relative shrink-0 self-stretch {threadLine === 'both'
+			class="relative h-fit shrink-0 self-stretch {threadLine === 'both'
 				? 'thread-middle'
 				: threadLine === 'above'
 					? 'thread-start'
