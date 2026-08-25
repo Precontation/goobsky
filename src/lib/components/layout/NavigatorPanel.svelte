@@ -2,6 +2,7 @@
 	import Icon from '$lib/assets/branding/Icon.svelte';
 	import { Bookmark, HatGlasses, House, Settings } from '@lucide/svelte';
 	import NavigatorButton from './NavigatorButton.svelte';
+	import PostButton from './PostButton.svelte';
 </script>
 
 <nav>
@@ -12,6 +13,8 @@
 	<NavigatorButton href="/(app)/public-feed" name="Public Feed"><HatGlasses /></NavigatorButton>
 	<NavigatorButton href="/(app)/saved" name="Saved"><Bookmark /></NavigatorButton>
 	<NavigatorButton href="/(app)/settings" name="Settings"><Settings /></NavigatorButton>
+
+	<PostButton />
 </nav>
 
 <style>
@@ -30,6 +33,8 @@
 	}
 
 	nav {
+		height: 100%;
+
 		margin-left: auto;
 		padding-right: 1rem;
 		width: min-content;

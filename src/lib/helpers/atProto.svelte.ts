@@ -1,5 +1,4 @@
 import { restoreBskySession } from '$lib/api/bskyApi';
-import type { PostItem } from '$lib/components/feed/Feed.svelte';
 import { PREFERRED_LANGUAGES } from '$lib/config';
 import {
 	AppBskyFeedDefs,
@@ -8,6 +7,7 @@ import {
 	type Agent
 } from '@atproto/api';
 import { SvelteURL } from 'svelte/reactivity';
+import type { PostItem } from '../feed/Feed.svelte';
 
 // Create aliases so it's easier to reference in the code
 export type ThreadItem = AppBskyFeedDefs.ThreadViewPost;
@@ -121,4 +121,17 @@ export const getPosts = async (uri: string, agent?: Agent): Promise<PostItem[]> 
 		// Something failed D:
 		// console.error(`Error while fetching: ${error.message}`);
 	}
+};
+
+export const sendPost = async (
+	content: string,
+	agent?: Agent
+): Promise<{ uri: string; cid: string } | undefined> => {
+	if (!agent) return;
+	const { uri, cid } = await agent.post({
+		text: content,
+		langs: ['en-us']
+	});
+
+	return { uri, cid };
 };
