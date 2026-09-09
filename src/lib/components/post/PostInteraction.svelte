@@ -74,7 +74,7 @@
 				aria-pressed={toggled}
 			>
 				<IconComponent
-					fill={toggled && fillWhenToggled ? 'var(--theme-primary)' : ''}
+					fill={toggled && fillWhenToggled ? 'var(--theme-primary)' : 'transparent'}
 					class={toggled ? 'text-primary' : ''}
 				></IconComponent>
 				{count}
