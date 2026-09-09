@@ -38,7 +38,6 @@
 	><SquarePen />
 	<span class="text">New post</span></button
 >
-
 <Dialog.Root
 	bind:open={isOpen}
 	onOpenChange={() => {
@@ -90,6 +89,7 @@
 		padding: 1rem;
 		gap: 0.75rem;
 		white-space: nowrap;
+		height: fit-content;
 
 		font-size: large;
 
@@ -102,7 +102,14 @@
 	}
 
 	@media (width < 1300px) {
+		.new-button {
+			margin-top: 0px;
+			border: none;
+			border-radius: var(--radius-theme);
+		}
+
 		.text {
+			margin-top: 0px;
 			display: none;
 		}
 	}

@@ -7,10 +7,12 @@ import {
 	type Agent
 } from '@atproto/api';
 import { SvelteURL } from 'svelte/reactivity';
-import type { PostItem } from '../feed/Feed.svelte';
 
 // Create aliases so it's easier to reference in the code
 export type ThreadItem = AppBskyFeedDefs.ThreadViewPost;
+export type PostItem = {
+	post: AppBskyFeedDefs.PostView;
+};
 
 export const getPostThread = async (uri: string, agent?: Agent): Promise<ThreadItem | null> => {
 	if (agent) {

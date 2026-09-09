@@ -1,10 +1,14 @@
 <script lang="ts">
 	import { dev } from '$app/environment';
-	import { X } from '@lucide/svelte';
-	import { onMount } from 'svelte';
+	import { TriangleAlert, X } from '@lucide/svelte';
+	import { onMount, type Snippet } from 'svelte';
 
-	let { title, content, dismissalId }: { title: string; content: string; dismissalId?: string } =
-		$props();
+	let {
+		title,
+		warn,
+		children,
+		dismissalId
+	}: { title: string; warn: boolean; children: Snippet; dismissalId?: string } = $props();
 
 	// The variable for is open, OFF by default to prevent flashing
 	let isOpen = $state(false);
@@ -45,7 +49,10 @@
 {#if isOpen}
 	<div class="full-page-note-container">
 		<h2>{title}</h2>
-		<p class="text-center">{content}</p>
+		{#if warn}
+			<TriangleAlert class="h-75 w-full text-surface" />
+		{/if}
+		<p class="text-center">{@render children()}</p>
 		{#if dismissalId}
 			<button class="close-button" onclick={() => close()}><X /></button>
 		{/if}
