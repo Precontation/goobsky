@@ -102,6 +102,12 @@
 	}
 
 	@media (width < 1300px) {
+		.new-button {
+			margin-top: 0px;
+			border: none;
+			border-radius: var(--radius-theme);
+		}
+
 		.text {
 			margin-top: 0px;
 			display: none;

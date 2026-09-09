@@ -8,7 +8,7 @@
 	const isActive = $derived.by(() => {
 		// Makes sure to NOT highlight if not on main page of href
 		// e.g. /home/discover/asdfasdf/ would not still highlight page
-		return page.route.id === href;
+		return page.url.pathname === href;
 	});
 </script>
 
