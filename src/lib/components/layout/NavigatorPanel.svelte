@@ -9,10 +9,10 @@
 	<a href="/" class="icon">
 		<Icon />
 	</a>
-	<NavigatorButton href="/(app)/(home)" name="Home"><House /></NavigatorButton>
-	<NavigatorButton href="/(app)/public-feed" name="Public Feed"><HatGlasses /></NavigatorButton>
-	<NavigatorButton href="/(app)/saved" name="Saved"><Bookmark /></NavigatorButton>
-	<NavigatorButton href="/(app)/settings" name="Settings"><Settings /></NavigatorButton>
+	<NavigatorButton href="/" name="Home"><House /></NavigatorButton>
+	<NavigatorButton href="/public-feed" name="Public Feed"><HatGlasses /></NavigatorButton>
+	<NavigatorButton href="/saved" name="Saved"><Bookmark /></NavigatorButton>
+	<NavigatorButton href="/settings" name="Settings"><Settings /></NavigatorButton>
 
 	<PostButton />
 </nav>

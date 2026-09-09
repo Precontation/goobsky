@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { RouteId } from '$app/types';
+	import type { Pathname } from '$app/types';
 	import TabFeedButton from './TabFeedButton.svelte';
 
 	let {
@@ -7,7 +7,7 @@
 	}: {
 		tabs: {
 			name: string;
-			href: RouteId;
+			href: Pathname;
 		}[];
 	} = $props();
 </script>
@@ -26,5 +26,11 @@
 		z-index: 1;
 		display: flex;
 		border-bottom: 1px solid var(--color-border);
+	}
+
+	@media (width < 1300px) {
+		.tab-container {
+			top: 58px; /* Hardcoded value referring to the height of the searchbar */
+		}
 	}
 </style>

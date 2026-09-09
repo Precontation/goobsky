@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
 	import { page } from '$app/state';
-	import type { RouteId } from '$app/types';
+	import type { Pathname } from '$app/types';
 	import type { Snippet } from 'svelte';
 
-	const { href, name, children }: { href: RouteId; name: string; children?: Snippet } = $props();
+	const { href, name, children }: { href: Pathname; name: string; children?: Snippet } = $props();
 	const isActive = $derived.by(() => {
 		// Makes sure to NOT highlight if not on main page of href
 		// e.g. /home/discover/asdfasdf/ would not still highlight page

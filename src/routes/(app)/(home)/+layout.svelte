@@ -16,11 +16,11 @@
 	tabs={[
 		{
 			name: 'Discover',
-			href: '/(app)/(home)'
+			href: '/'
 		},
 		{
 			name: 'Following',
-			href: '/(app)/(home)/following'
+			href: '/following'
 		}
 	]}
 />
