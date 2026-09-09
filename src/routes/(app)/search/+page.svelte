@@ -12,7 +12,7 @@
 </script>
 
 {#if query === ''}
-	<FullPageNote title={'Uh oh!'} content="The search query is blank!" />
+	<FullPageNote title={'Uh oh!'} warn={true}>The search query is blank!</FullPageNote>
 {:else if query === undefined}
 	<FullPageSpinner />
 {:else}

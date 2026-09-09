@@ -1,6 +1,7 @@
 <!-- TODO: implement tanstack -->
 <script lang="ts">
 	// Import the bluesky post types
+	import { resolve } from '$app/paths';
 	import { bskyAgent, restoreBskySession } from '$lib/api/bskyApi';
 	import Post from '$lib/components/post/Post.svelte';
 	import FullPageNote from '$lib/components/ui/notes/FullPageNote.svelte';
@@ -328,10 +329,15 @@
 				{/if}
 			{/each}
 		{:else}
-			<FullPageNote title={'Uh oh!'} content={'There seems to be no content available.'} />
+			<FullPageNote title={'Uh oh!'} warn={true}>No content available.</FullPageNote>
 		{/if}
 	{:else}
-		<FullPageNote title={'Uh oh!'} content={'There seems to be an error. Are you logged in?'} />
+		<FullPageNote title={'Uh oh!'} warn={true}>
+			An error occurred.
+			<a href={resolve('/(app)/settings/(settings)/accounts')} class="text-primary hover:underline"
+				>Are you logged in?</a
+			></FullPageNote
+		>
 	{/if}
 {:else}
 	<FullPageSpinner />

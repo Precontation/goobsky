@@ -81,20 +81,20 @@
 </div>
 
 {#if !loadingPosts}
-	<div class="pb-50">
-		{#each ancestors as item}
-			{#if AppBskyFeedDefs.isThreadViewPost(item)}
-				<Post
-					post={item.post}
-					hasBottomBorder={false}
-					replyText={undefined}
-					isClickable={true}
-					threadLine={ancestors.indexOf(item) === 0 ? 'below' : 'both'}
-				/>
-			{/if}
-		{/each}
+	{#if thread}
+		<div class="pb-50">
+			{#each ancestors as item}
+				{#if AppBskyFeedDefs.isThreadViewPost(item)}
+					<Post
+						post={item.post}
+						hasBottomBorder={false}
+						replyText={undefined}
+						isClickable={true}
+						threadLine={ancestors.indexOf(item) === 0 ? 'below' : 'both'}
+					/>
+				{/if}
+			{/each}
 
-		{#if thread}
 			<div bind:this={mainPost}>
 				<Post
 					post={thread.post}
@@ -110,13 +110,13 @@
 					<ThreadReply {item} depth={1} />
 				{/if}
 			{/each}
-		{:else}
-			<FullPageNote
-				title={'Post not found'}
-				content={"The post you were looking for was not found. It could be that the post is private, or that it doesn't exist."}
-			/>
-		{/if}
-	</div>
+		</div>
+	{:else}
+		<FullPageNote title={'Post not found'} warn={true}>
+			The post you were looking for was not found. It could be that the post is private, or that it
+			doesn't exist.
+		</FullPageNote>
+	{/if}
 {:else}
 	<FullPageSpinner />
 {/if}
